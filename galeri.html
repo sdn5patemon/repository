@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+
+<html lang="id">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Portal Sekolah - SD Negeri 5 Patemon</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet"/>
+<style>
+        :root {
+            --primary: #25eb35;
+            --secondary: #007a15;
+            --light: #f8fafc;
+        }
+        
+        body {
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            scroll-behavior: smooth;
+        }
+        
+        .hero-gradient {
+            background: linear-gradient(135deg, #008d13 0%, #1eaf25 50%, #3bf644 100%);
+        }
+        
+        .card-hover {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .card-hover:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+        
+        /* Gallery Styles */
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 30px;
+            padding: 20px 0;
+        }
+        
+        .gallery-card {
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .gallery-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.2);
+        }
+        
+        .gallery-image {
+            height: 250px;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .gallery-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.3s ease;
+        }
+        
+        .gallery-card:hover .gallery-image img {
+            transform: scale(1.1);
+        }
+        
+        .gallery-content {
+            padding: 20px;
+        }
+        
+        .gallery-title {
+            font-size: 1.4rem;
+            font-weight: 600;
+            color: #1f2937;
+            margin-bottom: 12px;
+        }
+        
+        .gallery-description {
+            color: #4b5563;
+            line-height: 1.6;
+            font-size: 0.95rem;
+            margin-bottom: 15px;
+        }
+        
+        .gallery-date {
+            color: #6b7280;
+            font-size: 0.875rem;
+            margin-bottom: 15px;
+        }
+        
+        .category-btn {
+            padding: 8px 16px;
+            background: #f1f5f9;
+            border-radius: 20px;
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: #374151;
+            transition: all 0.3s ease;
+        }
+        
+        .category-btn:hover,
+        .category-btn.active {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.9);
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .modal-content {
+            max-width: 90%;
+            max-height: 90%;
+            border-radius: 10px;
+        }
+        
+        .modal-caption {
+            color: white;
+            text-align: center;
+            margin-top: 15px;
+            font-size: 1.1rem;
+        }
+
+        .dropdown-menu {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+            min-width: 200px;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-10px);
+            transition: all 0.3s ease;
+            z-index: 1000;
+        }
+        
+        .dropdown-menu.show {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+        
+        .dropdown-item {
+            display: block;
+            padding: 12px 20px;
+            color: #374151;
+            text-decoration: none;
+            transition: all 0.2s ease;
+            border-bottom: 1px solid #f3f4f6;
+        }
+        
+        .dropdown-item:last-child {
+            border-bottom: none;
+        }
+        
+        .dropdown-item:hover {
+            background-color: #f9fafb;
+            color: #008d13;
+        }
+        
+        .student-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        .student-table th {
+            background-color: #f1f5f9;
+            padding: 12px;
+            text-align: left;
+            font-weight: 600;
+        }
+        
+        .student-table td {
+            padding: 12px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        
+        .student-table tr:hover {
+            background-color: #f8fafc;
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+<!-- Header & Navigation -->
+<header class="bg-white shadow-lg sticky top-0 z-50">
+  <nav class="container mx-auto px-6 py-4">
+    <div class="flex justify-between items-center">
+      <!-- Logo -->
+      <div class="flex items-center space-x-4">
+        <div class="w-12 h-12 bg-green-600 rounded-full flex items-center justify-center">
+          <i class="fas fa-graduation-cap text-white text-xl"></i>
+        </div>
+        <a href="index.html" class="navbar-brand ml-lg-3">
+          <h1 class="text-2xl font-bold text-gray-800">SD NEGERI 5 PATEMON</h1>
+        </a>
+      </div>
+
+      <!-- Menu Desktop -->
+      <div class="hidden md:flex space-x-8 items-center" id="menuDesktop">
+        <!-- Beranda Dropdown -->
+        <div class="relative group">
+          <button class="text-green-600 font-semibold hover:text-green-800 flex items-center dropdown-toggle">
+            Beranda <i class="fas fa-chevron-down ml-1 text-sm"></i>
+          </button>
+          <div class="dropdown-menu">
+            <a class="dropdown-item" href="profil.html">Profil Sekolah</a>
+            <a class="dropdown-item" href="visimisi.html">Visi & Misi</a>
+            <a class="dropdown-item" href="gurutendik.html">Guru dan Tendik</a>
+            <a class="dropdown-item" href="galeri.html">Galeri</a>
+          </div>
+        </div>
+
+        <!-- Siswa Dropdown -->
+        <div class="relative group">
+          <button class="text-gray-700 hover:text-green-600 flex items-center dropdown-toggle">
+            Data Siswa <i class="fas fa-chevron-down ml-1 text-sm"></i>
+          </button>
+          <div class="dropdown-menu">
+            <a class="dropdown-item" href="#data-siswa">Jumlah per Kelas</a>
+            <a class="dropdown-item" href="prestasi.html">Prestasi Siswa</a>
+            <a class="dropdown-item" href="ekstrakulikuler.html">Ekstrakurikuler</a>
+          </div>
+        </div>
+
+        <!-- Akademik Dropdown -->
+        <div class="relative group">
+          <button class="text-gray-700 hover:text-green-600 flex items-center dropdown-toggle">
+            Akademik <i class="fas fa-chevron-down ml-1 text-sm"></i>
+          </button>
+          <div class="dropdown-menu">
+            <a class="dropdown-item" href="jadwal.html">Jadwal Pelajaran</a>
+            <a class="dropdown-item" href="kurikulum.html">Kurikulum</a>
+            <a class="dropdown-item" href="arsip.html">Arsip Administrasi</a>
+          </div>
+        </div>
+
+        <!-- Informasi Dropdown -->
+        <div class="relative group">
+          <button class="text-gray-700 hover:text-green-600 flex items-center dropdown-toggle">
+            Informasi <i class="fas fa-chevron-down ml-1 text-sm"></i>
+          </button>
+          <div class="dropdown-menu">
+            <a class="dropdown-item" href="pengumuman.html">Pengumuman</a>
+            <a class="dropdown-item" href="map.html">Maps</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tombol Hamburger (Mobile) -->
+      <button id="menuToggle" class="md:hidden text-gray-700 focus:outline-none">
+        <i class="fas fa-bars text-2xl"></i>
+      </button>
+    </div>
+
+    <!-- Menu Mobile -->
+<div id="menuMobile" class="hidden flex-col space-y-2 mt-4 md:hidden bg-white rounded-lg shadow-lg p-4">
+  <!-- Beranda Dropdown -->
+  <div class="mobile-dropdown">
+    <button class="flex justify-between items-center w-full text-gray-700 font-semibold hover:text-green-600 py-2" onclick="toggleDropdown('berandaMobile')">
+      Beranda <i class="fas fa-chevron-down ml-2"></i>
+    </button>
+    <div id="berandaMobile" class="hidden flex-col pl-4 space-y-2">
+      <a href="profil.html" class="block text-gray-600 hover:text-green-600">Profil Sekolah</a>
+      <a href="visimisi.html" class="block text-gray-600 hover:text-green-600">Visi & Misi</a>
+      <a href="gurutendik.html" class="block text-gray-600 hover:text-green-600">Guru dan Tendik</a>
+      <a href="galeri.html" class="block text-gray-600 hover:text-green-600">Galeri</a>
+    </div>
+  </div>
+
+  <!-- Data Siswa Dropdown -->
+  <div class="mobile-dropdown">
+    <button class="flex justify-between items-center w-full text-gray-700 font-semibold hover:text-green-600 py-2" onclick="toggleDropdown('siswaMobile')">
+      Data Siswa <i class="fas fa-chevron-down ml-2"></i>
+    </button>
+    <div id="siswaMobile" class="hidden flex-col pl-4 space-y-2">
+      <a href="#data-siswa" class="block text-gray-600 hover:text-green-600">Jumlah per Kelas</a>
+      <a href="prestasi.html" class="block text-gray-600 hover:text-green-600">Prestasi Siswa</a>
+      <a href="ekstrakulikuler.html" class="block text-gray-600 hover:text-green-600">Ekstrakurikuler</a>
+    </div>
+  </div>
+
+  <!-- Akademik Dropdown -->
+  <div class="mobile-dropdown">
+    <button class="flex justify-between items-center w-full text-gray-700 font-semibold hover:text-green-600 py-2" onclick="toggleDropdown('akademikMobile')">
+      Akademik <i class="fas fa-chevron-down ml-2"></i>
+    </button>
+    <div id="akademikMobile" class="hidden flex-col pl-4 space-y-2">
+      <a href="jadwal.html" class="block text-gray-600 hover:text-green-600">Jadwal Pelajaran</a>
+      <a href="kurikulum.html" class="block text-gray-600 hover:text-green-600">Kurikulum</a>
+      <a href="arsip.html" class="block text-gray-600 hover:text-green-600">Arsip Administrasi</a>
+    </div>
+  </div>
+
+  <!-- Informasi Dropdown -->
+  <div class="mobile-dropdown">
+    <button class="flex justify-between items-center w-full text-gray-700 font-semibold hover:text-green-600 py-2" onclick="toggleDropdown('informasiMobile')">
+      Informasi <i class="fas fa-chevron-down ml-2"></i>
+    </button>
+    <div id="informasiMobile" class="hidden flex-col pl-4 space-y-2">
+      <a href="pengumuman.html" class="block text-gray-600 hover:text-green-600">Pengumuman</a>
+      <a href="map.html" class="block text-gray-600 hover:text-green-600">Maps</a>
+    </div>
+  </div>
+</div>
+</nav>
+</header>
+<!-- Hero Section -->
+<section class="hero-gradient text-white py-20" id="beranda">
+<div class="container mx-auto px-6 text-center">
+<h2 class="text-4xl md:text-6xl font-bold mb-6">Galeri</h2>
+</div>
+</section>
+
+<!-- Gallery Filter -->
+<section class="py-8 bg-white">
+  <div class="container mx-auto px-6">
+      <div class="flex flex-wrap justify-center gap-4">
+          <button class="category-btn active" data-category="all">Semua Kegiatan</button>
+          <button class="category-btn" data-category="academic">Akademik</button>
+          <button class="category-btn" data-category="sports">Olahraga</button>
+          <button class="category-btn" data-category="arts">Seni & Budaya</button>
+          <button class="category-btn" data-category="events">Acara Sekolah</button>
+      </div>
+  </div>
+</section>
+
+<!-- Gallery Content -->
+<section class="py-12 bg-gray-50">
+  <div class="container mx-auto px-6">
+      <div class="gallery-grid">
+          <!-- Kegiatan 1: Upacara Bendera -->
+          <div class="gallery-card" data-category="events">
+              <div class="gallery-image">
+                  <img src="https://placehold.co/600x400" alt="Upacara bendera hari Senin dengan siswa SD berseragam merah putih berbaris rapi di lapangan sekolah dengan tiang bendera di latar belakang" onclick="openModal(this)" />
+              </div>
+              <div class="gallery-content">
+                  <h3 class="gallery-title">Upacara Bendera Hari Senin</h3>
+                  <p class="gallery-date">15 Januari 2024</p>
+                  <p class="gallery-description">
+                      Kegiatan rutin upacara bendera untuk menumbuhkan rasa nasionalisme dan disiplin siswa.
+                      Semua siswa dari kelas 1-6 berpartisipasi dengan khidmat.
+                  </p>
+                  <span class="category-btn">Acara Sekolah</span>
+              </div>
+          </div>
+
+          <!-- Kegiatan 2: Lomba Matematika -->
+          <div class="gallery-card" data-category="academic">
+              <div class="gallery-image">
+                  <img src="https://placehold.co/600x400" alt="Siswa kelas 5 sedang serius mengerjakan soal lomba matematika di ruang kelas dengan papan tulis penuh rumus di belakang" onclick="openModal(this)" />
+              </div>
+              <div class="gallery-content">
+                  <h3 class="gallery-title">Lomba Matematika Sekolah</h3>
+                  <p class="gallery-date">22 Februari 2024</p>
+                  <p class="gallery-description">
+                      Kompetisi matematika antar kelas untuk mengasah kemampuan berhitung dan logika siswa.
+                      Diikuti oleh perwakilan dari setiap kelas.
+                  </p>
+                  <span class="category-btn">Akademik</span>
+              </div>
+          </div>
+
+          <!-- Kegiatan 3: Turnamen Futsal -->
+          <div class="gallery-card" data-category="sports">
+              <div class="gallery-image">
+                  <img src="https://placehold.co/600x400" alt="Pertandingan futsal antar kelas dengan pemain berebut bola di lapangan indoor sekolah yang dilaksanakan pada sore hari" onclick="openModal(this)" />
+              </div>
+              <div class="gallery-content">
+                  <h3 class="gallery-title">Turnamen Futsal Antar Kelas</h3>
+                  <p class="gallery-date">10 Maret 2024</p>
+                  <p class="gallery-description">
+                      Turnamen futsal tahunan yang menampilkan bakat sepakbola siswa. Kegiatan ini 
+                      mengajarkan kerjasama tim dan sportivitas dalam berkompetisi.
+                  </p>
+                  <span class="category-btn">Olahraga</span>
+              </div>
+          </div>
+
+          <!-- Kegiatan 4: Pentas Seni -->
+          <div class="gallery-card" data-category="arts">
+              <div class="gallery-image">
+                  <img src="https://placehold.co/600x400" alt="Pentas seni tari tradisional Bali dengan siswa perempuan menggunakan pakaian adat dan penari pria dengan properti tari di panggung sekolah" onclick="openModal(this)" />
+              </div>
+              <div class="gallery-content">
+                  <h3 class="gallery-title">Pentas Seni Budaya Bali</h3>
+                  <p class="gallery-date">28 Maret 2024</p>
+                  <p class="gallery-description">
+                      Pagelaran seni budaya yang menampilkan tarian tradisional Bali. Siswa menunjukkan 
+                      bakat seni mereka sambil melestarikan budaya lokal.
+                  </p>
+                  <span class="category-btn">Seni & Budaya</span>
+              </div>
+          </div>
+
+          <!-- Kegiatan 5: Field Trip -->
+          <div class="gallery-card" data-category="academic">
+              <div class="gallery-image">
+                  <img src="https://placehold.co/600x400" alt="Kunjungan edukasi ke museum dengan siswa SD menggunakan seragam dan topi sekolah sambil mendengarkan penjelasan pemandu" onclick="openModal(this)" />
+              </div>
+              <div class="gallery-content">
+                  <h3 class="gallery-title">Kunjungan Edukasi ke Museum</h3>
+                  <p class="gallery-date">5 April 2024</p>
+                  <p class="gallery-description">
+                      Field trip edukatif ke museum untuk memperkaya wawasan sejarah dan budaya siswa.
+                      Kegiatan belajar di luar kelas yang menyenangkan dan informatif.
+                  </p>
+                  <span class="category-btn">Akademik</span>
+              </div>
+          </div>
+
+          <!-- Kegiatan 6: Hari Kemerdekaan -->
+          <div class="gallery-card" data-category="events">
+              <div class="gallery-image">
+                  <img src="https://placehold.co/600x400" alt="Perayaan hari kemerdekaan dengan siswa mengikuti lomba balap karung di lapangan sekolah yang dihiasi bendera merah putih" onclick="openModal(this)" />
+              </div>
+              <div class="gallery-content">
+                  <h3 class="gallery-title">Perayaan Hari Kemerdekaan RI</h3>
+                  <p class="gallery-date">17 Agustus 2024</p>
+                  <p class="gallery-description">
+                      Serangkaian lomba dan kegiatan untuk memperingati hari kemerdekaan Indonesia.
+                      Menumbuhkan semangat patriotisme dan kebersamaan antar siswa.
+                  </p>
+                  <span class="category-btn">Acara Sekolah</span>
+              </div>
+          </div>
+      </div>
+  </div>
+</section>
+
+<!-- Modal untuk gambar besar -->
+<div id="imageModal" class="modal" onclick="closeModal()">
+  <div class="text-center">
+      <img id="modalImage" class="modal-content" src="" alt="" />
+      <p id="modalCaption" class="modal-caption"></p>
+  </div>
+</div>
+
+<!-- Footer -->
+<footer class="bg-gray-800 text-white py-12" id="Informasi">
+<div class="container mx-auto px-6">
+<div class="grid md:grid-cols-3 gap-8 mb-8">
+<div>
+<h3 class="text-xl font-bold mb-4">SD NEGERI 5 PATEMON</h3>
+<p class="text-gray-400 mb-4">Membangun generasi penerus bangsa yang berkarakter dan berprestasi</p>
+<div class="flex space-x-4">
+<a class="text-gray-400 hover:text-white" href="https://www.facebook.com/share/19zWJiSM7W/" target="_blank" rel="noopener noreferrer">
+<i class="fab fa-facebook-f"></i>
+</a>
+<a class="text-gray-400 hover:text-white" href="https://www.instagram.com/sdn5patemon?utm_source=qr&igsh=eXJqNGc0bXR1cGxy" target="_blank" rel="noopener noreferrer">
+<i class="fab fa-instagram"></i>
+</a>
+<a class="text-gray-400 hover:text-white" href="https://youtube.com/@sdn5patemon?si=LEakRqMh9bcU8fTk" target="_blank" rel="noopener noreferrer">
+<i class="fab fa-youtube"></i>
+</a>
+</div>
+</div>
+<div>
+<h4 class="text-lg font-semibold mb-4">Kontak</h4>
+<div class="space-y-2">
+<p class="text-gray-400">Br. Dinas Pemaroan, Desa Patemon, Kec. Seririt, Kab. Buleleng</p>
+<p class="text-gray-400">Contact Person: Sosial Media</p>
+<p class="text-gray-400">sdn5patemon@gmail.com</p>
+</div>
+</div>
+<div>
+<h4 class="text-lg font-semibold mb-4">Jam Operasional</h4>
+<div class="space-y-2">
+<p class="text-gray-400">Senin - Jumat: 07:00 - 13:00</p>
+<p class="text-gray-400">Sabtu: 07:00 - 12:00</p>
+<p class="text-gray-400">Minggu: Tutup</p>
+</div>
+</div>
+</div>
+<div class="border-t border-gray-700 pt-8 text-center">
+<p class="text-gray-400">© 2025 SDN5PTM. Semua hak dilindungi.</p>
+</div>
+</div>
+</footer>
+
+<script>
+  // Toggle menu mobile
+  const menuToggle = document.getElementById("menuToggle");
+  const menuMobile = document.getElementById("menuMobile");
+
+  menuToggle.addEventListener("click", () => {
+    menuMobile.classList.toggle("hidden");
+  });
+
+  
+  function toggleDropdown(id) {
+    const menu = document.getElementById(id);
+    menu.classList.toggle("hidden");
+  }
+
+  // Dropdown desktop hover
+  document.querySelectorAll('.group').forEach(group => {
+    group.addEventListener('mouseenter', function() {
+      this.querySelector('.dropdown-menu').classList.add('show');
+    });
+    group.addEventListener('mouseleave', function() {
+      this.querySelector('.dropdown-menu').classList.remove('show');
+    });
+  });
+
+  // Smooth scrolling for anchor links
+  document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+    anchor.addEventListener('click', function (e) {
+      e.preventDefault();
+      const target = document.querySelector(this.getAttribute('href'));
+      if (target) {
+        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    });
+  });
+
+// Gallery Filter Functionality
+const filterButtons = document.querySelectorAll('.category-btn');
+        const galleryCards = document.querySelectorAll('.gallery-card');
+
+        filterButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                // Remove active class from all buttons
+                filterButtons.forEach(btn => btn.classList.remove('active'));
+                // Add active class to clicked button
+                button.classList.add('active');
+                
+                const filter = button.getAttribute('data-category');
+                
+                galleryCards.forEach(card => {
+                    if (filter === 'all' || card.getAttribute('data-category') === filter) {
+                        card.style.display = 'block';
+                    } else {
+                        card.style.display = 'none';
+                    }
+                });
+            });
+        });
+
+        // Modal functionality
+        function openModal(img) {
+            const modal = document.getElementById('imageModal');
+            const modalImg = document.getElementById('modalImage');
+            const caption = document.getElementById('modalCaption');
+            
+            modal.style.display = 'flex';
+            modalImg.src = img.src;
+            caption.textContent = img.alt;
+        }
+
+        function closeModal() {
+            document.getElementById('imageModal').style.display = 'none';
+        }
+
+        // Close modal when pressing ESC key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeModal();
+            }
+        });
+    </script>
+</script>
+</body>
+</html>
