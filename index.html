@@ -9,8 +9,8 @@
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet"/>
 <style>
         :root {
-            --primary: #2563eb;
-            --secondary: #1e40af;
+            --primary: #25eb35;
+            --secondary: #007a15;
             --light: #f8fafc;
         }
         
@@ -20,7 +20,7 @@
         }
         
         .hero-gradient {
-            background: linear-gradient(135deg, #2563eb 0%, #1e40af 50%, #3b82f6 100%);
+            background: linear-gradient(135deg, #008d13 0%, #1eaf25 50%, #3bf644 100%);
         }
         
         .card-hover {
@@ -68,7 +68,7 @@
         
         .dropdown-item:hover {
             background-color: #f9fafb;
-            color: #2563eb;
+            color: #008d13;
         }
         
         .student-table {
@@ -100,60 +100,61 @@
     <div class="flex justify-between items-center">
       <!-- Logo -->
       <div class="flex items-center space-x-4">
-        <div class="w-12 h-12 bg-blue-600 rounded-full flex items-center justify-center">
+        <div class="w-12 h-12 bg-green-600 rounded-full flex items-center justify-center">
           <i class="fas fa-graduation-cap text-white text-xl"></i>
         </div>
-        <h1 class="text-2xl font-bold text-gray-800">SD NEGERI 5 PATEMON</h1>
+        <a href="index.html" class="navbar-brand ml-lg-3">
+          <h1 class="text-2xl font-bold text-gray-800">SD NEGERI 5 PATEMON</h1>
+        </a>
       </div>
 
       <!-- Menu Desktop -->
       <div class="hidden md:flex space-x-8 items-center" id="menuDesktop">
         <!-- Beranda Dropdown -->
         <div class="relative group">
-          <button class="text-blue-600 font-semibold hover:text-blue-800 flex items-center dropdown-toggle">
+          <button class="text-green-600 font-semibold hover:text-green-800 flex items-center dropdown-toggle">
             Beranda <i class="fas fa-chevron-down ml-1 text-sm"></i>
           </button>
           <div class="dropdown-menu">
-            <a class="dropdown-item" href="#">Profil Sekolah</a>
-            <a class="dropdown-item" href="#">Visi & Misi</a>
-            <a class="dropdown-item" href="#">Guru dan Tendik</a>
-            <a class="dropdown-item" href="#">Galeri</a>
+            <a class="dropdown-item" href="profil.html">Profil Sekolah</a>
+            <a class="dropdown-item" href="visimisi.html">Visi & Misi</a>
+            <a class="dropdown-item" href="gurutendik.html">Guru dan Tendik</a>
+            <a class="dropdown-item" href="galeri.html">Galeri</a>
           </div>
         </div>
 
         <!-- Siswa Dropdown -->
         <div class="relative group">
-          <button class="text-gray-700 hover:text-blue-600 flex items-center dropdown-toggle">
+          <button class="text-gray-700 hover:text-green-600 flex items-center dropdown-toggle">
             Data Siswa <i class="fas fa-chevron-down ml-1 text-sm"></i>
           </button>
           <div class="dropdown-menu">
             <a class="dropdown-item" href="#data-siswa">Jumlah per Kelas</a>
-            <a class="dropdown-item" href="#">Prestasi Siswa</a>
-            <a class="dropdown-item" href="#">Ekstrakurikuler</a>
+            <a class="dropdown-item" href="prestasi.html">Prestasi Siswa</a>
+            <a class="dropdown-item" href="ekstrakulikuler.html">Ekstrakurikuler</a>
           </div>
         </div>
 
         <!-- Akademik Dropdown -->
         <div class="relative group">
-          <button class="text-gray-700 hover:text-blue-600 flex items-center dropdown-toggle">
+          <button class="text-gray-700 hover:text-green-600 flex items-center dropdown-toggle">
             Akademik <i class="fas fa-chevron-down ml-1 text-sm"></i>
           </button>
           <div class="dropdown-menu">
-            <a class="dropdown-item" href="#">Jadwal Pelajaran</a>
-            <a class="dropdown-item" href="#">Kalender Akademik</a>
-            <a class="dropdown-item" href="#">Kurikulum</a>
+            <a class="dropdown-item" href="jadwal.html">Jadwal Pelajaran</a>
+            <a class="dropdown-item" href="kurikulum.html">Kurikulum</a>
+            <a class="dropdown-item" href="arsip.html">Arsip Administrasi</a>
           </div>
         </div>
 
         <!-- Informasi Dropdown -->
         <div class="relative group">
-          <button class="text-gray-700 hover:text-blue-600 flex items-center dropdown-toggle">
+          <button class="text-gray-700 hover:text-green-600 flex items-center dropdown-toggle">
             Informasi <i class="fas fa-chevron-down ml-1 text-sm"></i>
           </button>
           <div class="dropdown-menu">
-            <a class="dropdown-item" href="#">Berita</a>
-            <a class="dropdown-item" href="#">Pengumuman</a>
-            <a class="dropdown-item" href="#">Kegiatan</a>
+            <a class="dropdown-item" href="pengumuman.html">Pengumuman</a>
+            <a class="dropdown-item" href="map.html">Maps</a>
           </div>
         </div>
       </div>
@@ -165,24 +166,67 @@
     </div>
 
     <!-- Menu Mobile -->
-    <div id="menuMobile" class="hidden flex-col space-y-4 mt-4 md:hidden bg-white rounded-lg shadow-lg p-4">
-      <a href="#beranda" class="block text-gray-700 hover:text-blue-600">Beranda</a>
-      <a href="#data-siswa" class="block text-gray-700 hover:text-blue-600">Data Siswa</a>
-      <a href="#" class="block text-gray-700 hover:text-blue-600">Akademik</a>
-      <a href="#" class="block text-gray-700 hover:text-blue-600">Informasi</a>
+<div id="menuMobile" class="hidden flex-col space-y-2 mt-4 md:hidden bg-white rounded-lg shadow-lg p-4">
+  <!-- Beranda Dropdown -->
+  <div class="mobile-dropdown">
+    <button class="flex justify-between items-center w-full text-gray-700 font-semibold hover:text-green-600 py-2" onclick="toggleDropdown('berandaMobile')">
+      Beranda <i class="fas fa-chevron-down ml-2"></i>
+    </button>
+    <div id="berandaMobile" class="hidden flex-col pl-4 space-y-2">
+      <a href="profil.html" class="block text-gray-600 hover:text-green-600">Profil Sekolah</a>
+      <a href="visimisi.html" class="block text-gray-600 hover:text-green-600">Visi & Misi</a>
+      <a href="gurutendik.html" class="block text-gray-600 hover:text-green-600">Guru dan Tendik</a>
+      <a href="galeri.html" class="block text-gray-600 hover:text-green-600">Galeri</a>
     </div>
-  </nav>
+  </div>
+
+  <!-- Data Siswa Dropdown -->
+  <div class="mobile-dropdown">
+    <button class="flex justify-between items-center w-full text-gray-700 font-semibold hover:text-green-600 py-2" onclick="toggleDropdown('siswaMobile')">
+      Data Siswa <i class="fas fa-chevron-down ml-2"></i>
+    </button>
+    <div id="siswaMobile" class="hidden flex-col pl-4 space-y-2">
+      <a href="#data-siswa" class="block text-gray-600 hover:text-green-600">Jumlah per Kelas</a>
+      <a href="prestasi.html" class="block text-gray-600 hover:text-green-600">Prestasi Siswa</a>
+      <a href="ekstrakulikuler.html" class="block text-gray-600 hover:text-green-600">Ekstrakurikuler</a>
+    </div>
+  </div>
+
+  <!-- Akademik Dropdown -->
+  <div class="mobile-dropdown">
+    <button class="flex justify-between items-center w-full text-gray-700 font-semibold hover:text-green-600 py-2" onclick="toggleDropdown('akademikMobile')">
+      Akademik <i class="fas fa-chevron-down ml-2"></i>
+    </button>
+    <div id="akademikMobile" class="hidden flex-col pl-4 space-y-2">
+      <a href="jadwal.html" class="block text-gray-600 hover:text-green-600">Jadwal Pelajaran</a>
+      <a href="kurikulum.html" class="block text-gray-600 hover:text-green-600">Kurikulum</a>
+      <a href="arsip.html" class="block text-gray-600 hover:text-green-600">Arsip Administrasi</a>
+    </div>
+  </div>
+
+  <!-- Informasi Dropdown -->
+  <div class="mobile-dropdown">
+    <button class="flex justify-between items-center w-full text-gray-700 font-semibold hover:text-green-600 py-2" onclick="toggleDropdown('informasiMobile')">
+      Informasi <i class="fas fa-chevron-down ml-2"></i>
+    </button>
+    <div id="informasiMobile" class="hidden flex-col pl-4 space-y-2">
+      <a href="pengumuman.html" class="block text-gray-600 hover:text-green-600">Pengumuman</a>
+      <a href="map.html" class="block text-gray-600 hover:text-green-600">Maps</a>
+    </div>
+  </div>
+</div>
+</nav>
 </header>
 <!-- Hero Section -->
 <section class="hero-gradient text-white py-20" id="beranda">
 <div class="container mx-auto px-6 text-center">
-<h2 class="text-4xl md:text-6xl font-bold mb-6">Selamat Datang di SD Negeri 5 Patemon</h2>
-<p class="text-xl md:text-2xl mb-8 opacity-90">Membangun Generasi Penerus Bangsa yang Berkarakter dan Berprestasi</p>
+<h2 class="text-4xl md:text-6xl font-bold mb-6">Selamat Datang di Portal Sekolah</h2>
+<h2 class="text-4xl md:text-4xl font-bold mb-6">SD NEGERI 5 PATEMON</h2>
 <div class="flex flex-col md:flex-row justify-center space-y-4 md:space-y-0 md:space-x-6">
-<a class="bg-white text-blue-600 px-8 py-3 rounded-full font-semibold hover:bg-gray-100 transition duration-300" href="#data-siswa">
+<a class="border-2 border-white text-white px-8 py-3 rounded-full font-semibold hover:bg-white hover:text-green-600 transition duration-300" href="#data-siswa">
                     Lihat Data Siswa
                 </a>
-<a class="border-2 border-white text-white px-8 py-3 rounded-full font-semibold hover:bg-white hover:text-blue-600 transition duration-300" href="#">
+<a class="border-2 border-white text-white px-8 py-3 rounded-full font-semibold hover:bg-white hover:text-green-600 transition duration-300" href="#">
                     Kontak Kami
                 </a>
 </div>
@@ -196,25 +240,25 @@
 <p class="text-lg text-gray-600 max-w-3xl mx-auto">Visi dan Misi Sekolah, Lokasi Sekolah, dan Data Guru serta Tenaga Kependidikan</p>
 </div>
 <div class="grid md:grid-cols-3 gap-8">
-<div class="text-center card-hover p-6 rounded-lg bg-gray-50">
+<div class="text-center card-hover p-6 rounded-lg bg-gray-50" onclick="window.open('visimisi.html', '_blank')">
 <div class="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
 <i class="fas fa-eye text-blue-600 text-2xl"></i>
 </div>
-<h3 class="text-xl font-semibold mb-2">Visi & Misi</h3>
+<h3 class="text-xl font-semibold mb-2" onclick="window.open('visimisi.html', '_blank')">Visi & Misi</h3>
 <p class="text-gray-600">Mewujudkan peserta didik yang berprestasi, berkarakter, berwawasan luas, dan peduli lingkungan dalam semangat Pancasila</p>
 </div>
-<div class="text-center card-hover p-6 rounded-lg bg-gray-50">
+<div class="text-center card-hover p-6 rounded-lg bg-gray-50" onclick="window.open('map.html', '_blank')">
 <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
 <i class="fas fa-bullseye text-green-600 text-2xl"></i>
 </div>
-<h3 class="text-xl font-semibold mb-2">Lokasi</h3>
+<h3 class="text-xl font-semibold mb-2" onclick="window.open('map.html', '_blank')">Lokasi</h3>
 <p class="text-gray-600">Ditinjau dari letak geografis, SD Negeri 5 Patemon berada dipusat desa Patemon, Kecamatan Seririt</p>
 </div>
-<div class="text-center card-hover p-6 rounded-lg bg-gray-50">
+<div class="text-center card-hover p-6 rounded-lg bg-gray-50" onclick="window.open('gurutendik.html', '_blank')">
 <div class="w-16 h-16 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-4">
 <i class="fas fa-users text-purple-600 text-2xl"></i>
 </div>
-<h3 class="text-xl font-semibold mb-2">Guru dan Tendik</h3>
+<h3 class="text-xl font-semibold mb-2" onclick="window.open('gurutendik.html', '_blank')">Guru dan Tendik</h3>
 <p class="text-gray-600">Data guru dan tenaga kependidikan</p>
 </div>
 </div>
@@ -290,20 +334,20 @@
 </div>
 </section>
 <!-- Footer -->
-<footer class="bg-gray-800 text-white py-12">
+<footer class="bg-gray-800 text-white py-12" id="Informasi">
 <div class="container mx-auto px-6">
 <div class="grid md:grid-cols-3 gap-8 mb-8">
 <div>
 <h3 class="text-xl font-bold mb-4">SD NEGERI 5 PATEMON</h3>
 <p class="text-gray-400 mb-4">Membangun generasi penerus bangsa yang berkarakter dan berprestasi</p>
 <div class="flex space-x-4">
-<a class="text-gray-400 hover:text-white" href="#">
+<a class="text-gray-400 hover:text-white" href="https://www.facebook.com/share/19zWJiSM7W/" target="_blank" rel="noopener noreferrer">
 <i class="fab fa-facebook-f"></i>
 </a>
-<a class="text-gray-400 hover:text-white" href="#">
+<a class="text-gray-400 hover:text-white" href="https://www.instagram.com/sdn5patemon?utm_source=qr&igsh=eXJqNGc0bXR1cGxy" target="_blank" rel="noopener noreferrer">
 <i class="fab fa-instagram"></i>
 </a>
-<a class="text-gray-400 hover:text-white" href="#">
+<a class="text-gray-400 hover:text-white" href="https://youtube.com/@sdn5patemon?si=LEakRqMh9bcU8fTk" target="_blank" rel="noopener noreferrer">
 <i class="fab fa-youtube"></i>
 </a>
 </div>
@@ -339,6 +383,12 @@
   menuToggle.addEventListener("click", () => {
     menuMobile.classList.toggle("hidden");
   });
+
+  
+  function toggleDropdown(id) {
+    const menu = document.getElementById(id);
+    menu.classList.toggle("hidden");
+  }
 
   // Dropdown desktop hover
   document.querySelectorAll('.group').forEach(group => {
