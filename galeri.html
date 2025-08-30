@@ -174,27 +174,7 @@
             background-color: #f9fafb;
             color: #008d13;
         }
-        
-        .student-table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-        
-        .student-table th {
-            background-color: #f1f5f9;
-            padding: 12px;
-            text-align: left;
-            font-weight: 600;
-        }
-        
-        .student-table td {
-            padding: 12px;
-            border-bottom: 1px solid #e2e8f0;
-        }
-        
-        .student-table tr:hover {
-            background-color: #f8fafc;
-        }
+               
     </style>
 </head>
 <body class="bg-gray-50">
@@ -333,10 +313,6 @@
   <div class="container mx-auto px-6">
       <div class="flex flex-wrap justify-center gap-4">
           <button class="category-btn active" data-category="all">Semua Kegiatan</button>
-          <button class="category-btn" data-category="academic">Akademik</button>
-          <button class="category-btn" data-category="sports">Olahraga</button>
-          <button class="category-btn" data-category="arts">Seni & Budaya</button>
-          <button class="category-btn" data-category="events">Acara Sekolah</button>
       </div>
   </div>
 </section>
@@ -344,103 +320,9 @@
 <!-- Gallery Content -->
 <section class="py-12 bg-gray-50">
   <div class="container mx-auto px-6">
-      <div class="gallery-grid">
-          <!-- Kegiatan 1: Upacara Bendera -->
-          <div class="gallery-card" data-category="events">
-              <div class="gallery-image">
-                  <img src="https://placehold.co/600x400" alt="Upacara bendera hari Senin dengan siswa SD berseragam merah putih berbaris rapi di lapangan sekolah dengan tiang bendera di latar belakang" onclick="openModal(this)" />
-              </div>
-              <div class="gallery-content">
-                  <h3 class="gallery-title">Upacara Bendera Hari Senin</h3>
-                  <p class="gallery-date">15 Januari 2024</p>
-                  <p class="gallery-description">
-                      Kegiatan rutin upacara bendera untuk menumbuhkan rasa nasionalisme dan disiplin siswa.
-                      Semua siswa dari kelas 1-6 berpartisipasi dengan khidmat.
-                  </p>
-                  <span class="category-btn">Acara Sekolah</span>
-              </div>
-          </div>
-
-          <!-- Kegiatan 2: Lomba Matematika -->
-          <div class="gallery-card" data-category="academic">
-              <div class="gallery-image">
-                  <img src="https://placehold.co/600x400" alt="Siswa kelas 5 sedang serius mengerjakan soal lomba matematika di ruang kelas dengan papan tulis penuh rumus di belakang" onclick="openModal(this)" />
-              </div>
-              <div class="gallery-content">
-                  <h3 class="gallery-title">Lomba Matematika Sekolah</h3>
-                  <p class="gallery-date">22 Februari 2024</p>
-                  <p class="gallery-description">
-                      Kompetisi matematika antar kelas untuk mengasah kemampuan berhitung dan logika siswa.
-                      Diikuti oleh perwakilan dari setiap kelas.
-                  </p>
-                  <span class="category-btn">Akademik</span>
-              </div>
-          </div>
-
-          <!-- Kegiatan 3: Turnamen Futsal -->
-          <div class="gallery-card" data-category="sports">
-              <div class="gallery-image">
-                  <img src="https://placehold.co/600x400" alt="Pertandingan futsal antar kelas dengan pemain berebut bola di lapangan indoor sekolah yang dilaksanakan pada sore hari" onclick="openModal(this)" />
-              </div>
-              <div class="gallery-content">
-                  <h3 class="gallery-title">Turnamen Futsal Antar Kelas</h3>
-                  <p class="gallery-date">10 Maret 2024</p>
-                  <p class="gallery-description">
-                      Turnamen futsal tahunan yang menampilkan bakat sepakbola siswa. Kegiatan ini 
-                      mengajarkan kerjasama tim dan sportivitas dalam berkompetisi.
-                  </p>
-                  <span class="category-btn">Olahraga</span>
-              </div>
-          </div>
-
-          <!-- Kegiatan 4: Pentas Seni -->
-          <div class="gallery-card" data-category="arts">
-              <div class="gallery-image">
-                  <img src="https://placehold.co/600x400" alt="Pentas seni tari tradisional Bali dengan siswa perempuan menggunakan pakaian adat dan penari pria dengan properti tari di panggung sekolah" onclick="openModal(this)" />
-              </div>
-              <div class="gallery-content">
-                  <h3 class="gallery-title">Pentas Seni Budaya Bali</h3>
-                  <p class="gallery-date">28 Maret 2024</p>
-                  <p class="gallery-description">
-                      Pagelaran seni budaya yang menampilkan tarian tradisional Bali. Siswa menunjukkan 
-                      bakat seni mereka sambil melestarikan budaya lokal.
-                  </p>
-                  <span class="category-btn">Seni & Budaya</span>
-              </div>
-          </div>
-
-          <!-- Kegiatan 5: Field Trip -->
-          <div class="gallery-card" data-category="academic">
-              <div class="gallery-image">
-                  <img src="https://placehold.co/600x400" alt="Kunjungan edukasi ke museum dengan siswa SD menggunakan seragam dan topi sekolah sambil mendengarkan penjelasan pemandu" onclick="openModal(this)" />
-              </div>
-              <div class="gallery-content">
-                  <h3 class="gallery-title">Kunjungan Edukasi ke Museum</h3>
-                  <p class="gallery-date">5 April 2024</p>
-                  <p class="gallery-description">
-                      Field trip edukatif ke museum untuk memperkaya wawasan sejarah dan budaya siswa.
-                      Kegiatan belajar di luar kelas yang menyenangkan dan informatif.
-                  </p>
-                  <span class="category-btn">Akademik</span>
-              </div>
-          </div>
-
-          <!-- Kegiatan 6: Hari Kemerdekaan -->
-          <div class="gallery-card" data-category="events">
-              <div class="gallery-image">
-                  <img src="https://placehold.co/600x400" alt="Perayaan hari kemerdekaan dengan siswa mengikuti lomba balap karung di lapangan sekolah yang dihiasi bendera merah putih" onclick="openModal(this)" />
-              </div>
-              <div class="gallery-content">
-                  <h3 class="gallery-title">Perayaan Hari Kemerdekaan RI</h3>
-                  <p class="gallery-date">17 Agustus 2024</p>
-                  <p class="gallery-description">
-                      Serangkaian lomba dan kegiatan untuk memperingati hari kemerdekaan Indonesia.
-                      Menumbuhkan semangat patriotisme dan kebersamaan antar siswa.
-                  </p>
-                  <span class="category-btn">Acara Sekolah</span>
-              </div>
-          </div>
-      </div>
+    <div class="gallery-grid" id="galleryContainer">
+      <div class="text-center text-gray-500 col-span-full">Memuat galeri...</div>
+    </div>    
   </div>
 </section>
 
@@ -575,6 +457,41 @@ const filterButtons = document.querySelectorAll('.category-btn');
             }
         });
     </script>
+
+<script>
+  const galeriApi = "https://script.google.com/macros/s/AKfycbw-5Qug3YTy2aKklUoxUX02OvvI3HzSiEuFCBqitbUnkwUw_Ogoejsga-Aj0hSUFtOU1g/exec"; // ganti dengan URL Web App dari Apps Script
+
+  fetch(galeriApi)
+    .then(res => res.json())
+    .then(data => {
+      const container = document.getElementById("galleryContainer");
+      container.innerHTML = "";
+
+      data.forEach(item => {
+        let card = document.createElement("div");
+        card.className = "gallery-card";
+        card.setAttribute("data-category", item.category);
+
+        card.innerHTML = `
+          <div class="gallery-image">
+            <img src="${item.imageUrl}" alt="${item.title}" onclick="openModal(this)" />
+          </div>
+          <div class="gallery-content">
+            <h3 class="gallery-title">${item.title}</h3>
+            <p class="gallery-date">${item.date}</p>
+            <p class="gallery-description">${item.description}</p>
+            <span class="category-btn">${item.category}</span>
+          </div>
+        `;
+        container.appendChild(card);
+      });
+    })
+    .catch(err => {
+      document.getElementById("galleryContainer").innerHTML =
+        `<div class="text-center text-red-500 col-span-full">Gagal memuat galeri.</div>`;
+      console.error(err);
+    });
 </script>
+
 </body>
 </html>
