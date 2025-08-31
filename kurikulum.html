@@ -71,25 +71,152 @@
             color: #008d13;
         }
         
-        .student-table {
-            width: 100%;
-            border-collapse: collapse;
+        /* Tambahan CSS untuk Portal File */
+        .nav-tabs-portal {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
         }
-        
-        .student-table th {
-            background-color: #f1f5f9;
-            padding: 12px;
-            text-align: left;
+
+        .nav-tab-portal {
+            background: rgba(255, 255, 255, 0.9);
+            padding: 1rem 2rem;
+            border-radius: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+            font-weight: 600;
+            color: #4a5568;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+
+        .nav-tab-portal:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            border-color: var(--primary); /* Menggunakan warna primary dari tema Anda */
+        }
+
+        .nav-tab-portal.active {
+            background: var(--primary); /* Menggunakan warna primary dari tema Anda */
+            color: white;
+            border-color: var(--primary);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15);
+        }
+
+        .content-section-portal {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 2rem;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .file-grid-portal {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1rem;
+        }
+
+        .file-card-portal {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+            transition: all 0.3s ease;
+            border-left: 4px solid var(--primary); /* Menggunakan warna primary dari tema Anda */
+        }
+
+        .file-card-portal:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+        }
+
+        .file-icon-portal {
+            width: 60px;
+            height: 60px;
+            margin-bottom: 1rem;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, var(--primary), var(--secondary)); /* Menggunakan warna tema Anda */
+            color: white;
+            font-size: 1.5rem;
+        }
+
+        .file-title-portal {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #2d3748;
+            margin-bottom: 0.5rem;
+        }
+
+        .file-description-portal {
+            color: #718096;
+            margin-bottom: 1rem;
+            font-size: 0.9rem;
+        }
+
+        .file-meta-portal {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 1rem;
+            border-top: 1px solid #e2e8f0;
+        }
+
+        .file-type-portal {
+            background: #e9d8fd; /* Bisa disesuaikan dengan warna tema */
+            color: #6b46c1; /* Bisa disesuaikan dengan warna tema */
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
             font-weight: 600;
         }
-        
-        .student-table td {
-            padding: 12px;
-            border-bottom: 1px solid #e2e8f0;
+
+        .Lihat-btn-portal {
+            background: linear-gradient(135deg, var(--primary), var(--secondary)); /* Menggunakan warna tema Anda */
+            color: white;
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            font-weight: 600;
+            transition: all 0.3s ease;
         }
-        
-        .student-table tr:hover {
-            background-color: #f8fafc;
+
+        .Lihat-btn-portal:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(var(--primary-rgb), 0.3); /* Menggunakan primary-rgb */
+        }
+
+        .section-title-portal {
+            color: #4a5568;
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid #e2e8f0;
+        }
+
+        @media (max-width: 768px) {
+            .nav-tabs-portal {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .nav-tab-portal {
+                width: 100%;
+                text-align: center;
+            }
+            
+            .file-grid-portal {
+                grid-template-columns: 1fr;
+            }
         }
     </style>
 </head>
@@ -223,14 +350,29 @@
 <h2 class="text-4xl md:text-6xl font-bold mb-6">Kurikulum</h2>
 </div>
 </section>
-<!-- About Section -->
-<section class="py-20 bg-white">
-<div class="container mx-auto px-6">
-<div class="text-center mb-16">
-<h2 class="text-3xl md:text-4xl font-bold text-gray-800 mb-4">Tentang Sekolah</h2>
-<p class="text-lg text-gray-600 max-w-3xl mx-auto">SESUAIKAN DENGAN KONTEN</p>
-</div>
-</div>
+
+<!-- Portal File Section -->
+<section class="py-12 bg-gray-50">
+  <div class="container mx-auto px-6">
+      <div class="text-center mb-12">
+          <h2 class="text-3xl md:text-4xl font-bold text-gray-800 mb-4">Pusat Dokumen Akademik</h2>
+          <p class="text-lg text-gray-600 max-w-3xl mx-auto">Temukan pedoman, kurikulum, dan administrasi kelas terbaru di sini.</p>
+      </div>
+
+      <div class="nav-tabs-portal">
+          <div class="nav-tab-portal active" data-category="pedoman">Pedoman Akademik</div>
+          <div class="nav-tab-portal" data-category="kurikulum">Kurikulum</div>
+          <div class="nav-tab-portal" data-category="administrasi">Administrasi Kelas</div>
+      </div>
+
+      <div class="content-section-portal">
+          <h2 class="section-title-portal" id="current-category-portal">Pedoman Akademik</h2>
+          
+          <div class="file-grid-portal" id="file-container-portal">
+              <!-- Konten akan dimuat oleh JavaScript -->
+          </div>
+      </div>
+  </div>
 </section>
 
 <!-- Footer -->
@@ -309,6 +451,137 @@
         target.scrollIntoView({ behavior: 'smooth', block: 'start' });
       }
     });
+  });
+
+
+  // JavaScript untuk Portal File
+  document.addEventListener('DOMContentLoaded', function() {
+      const navTabsPortal = document.querySelectorAll('.nav-tab-portal');
+      const fileContainerPortal = document.getElementById('file-container-portal');
+      const currentCategoryPortal = document.getElementById('current-category-portal');
+      
+      const fileData = {
+          pedoman: [
+              {
+                  icon: '📘',
+                  title: 'Pedoman Akademik 2025',
+                  description: 'Panduan lengkap akademik tahun 2025 untuk siswa dan guru',
+                  type: 'PDF',
+                  link: '#' // Ganti dengan link sebenarnya
+              },
+              {
+                  icon: '📋',
+                  title: 'Kriteria Ketercapaian Tujuan Pembelajaran',
+                  description: 'KKTP yang diberlakukan di satuan pendidikan',
+                  type: 'DOC',
+                  link: '#' // Ganti dengan link sebenarnya
+              },
+              {
+                  icon: '🎓',
+                  title: 'Standar Kelulusan',
+                  description: 'Prosedur dan persyaratan kelulusan siswa',
+                  type: 'PDF',
+                  link: '#' // Ganti dengan link sebenarnya
+              },
+          ],
+          kurikulum: [
+              {
+                  icon: '📚',
+                  title: 'Kurikulum Satuan Pendidikan',
+                  description: 'Struktur kurikulum untuk jenjang Sekolah Dasar',
+                  type: 'PDF',
+                  link: '#' // Ganti dengan link sebenarnya
+              },
+              {
+                  icon: '🔄',
+                  title: 'Peraturan Kurikulum Pendidikan Nasional',
+                  description: 'Peraturan Menteri dan Perubahan/pembaruan kurikulum terbaru',
+                  type: 'PDF',
+                  link: '#' // Ganti dengan link sebenarnya
+              },
+          ],
+          administrasi: [
+              {
+                  icon: '📝',
+                  title: 'Administrasi Kelas 1',
+                  description: 'Memuat daftar siswa, pengorganisasian kelas, modul ajar, dan sebagainya',
+                  type: 'PDF',
+                  link: '#' // Ganti dengan link sebenarnya
+              },
+              {
+                  icon: '📝',
+                  title: 'Administrasi Kelas 2',
+                  description: 'Memuat daftar siswa, pengorganisasian kelas, modul ajar, dan sebagainya',
+                  type: 'PDF',
+                  link: '#' // Ganti dengan link sebenarnya
+              },
+              {
+                  icon: '📝',
+                  title: 'Administrasi Kelas 3',
+                  description: 'Memuat daftar siswa, pengorganisasian kelas, modul ajar, dan sebagainya',
+                  type: 'PDF',
+                  link: '#' // Ganti dengan link sebenarnya
+              },
+              {
+                  icon: '📝',
+                  title: 'Administrasi Kelas 4',
+                  description: 'Memuat daftar siswa, pengorganisasian kelas, modul ajar, dan sebagainya',
+                  type: 'PDF',
+                  link: '#' // Ganti dengan link sebenarnya
+              },
+              {
+                  icon: '📝',
+                  title: 'Administrasi Kelas 5',
+                  description: 'Memuat daftar siswa, pengorganisasian kelas, modul ajar, dan sebagainya',
+                  type: 'PDF',
+                  link: '#' // Ganti dengan link sebenarnya
+              },
+              {
+                  icon: '📝',
+                  title: 'Administrasi Kelas 6',
+                  description: 'Memuat daftar siswa, pengorganisasian kelas, modul ajar, dan sebagainya',
+                  type: 'PDF',
+                  link: '#' // Ganti dengan link sebenarnya
+              }
+          ]
+      };
+
+      // Fungsi untuk merender kartu file
+      function renderFiles(category) {
+          fileContainerPortal.innerHTML = '';
+          fileData[category].forEach(file => {
+              const fileCard = document.createElement('div');
+              fileCard.className = 'file-card-portal';
+              fileCard.innerHTML = `
+                  <div class="file-icon-portal">${file.icon}</div>
+                  <h3 class="file-title-portal">${file.title}</h3>
+                  <p class="file-description-portal">${file.description}</p>
+                  <div class="file-meta-portal">
+                      <span class="file-type-portal">${file.type}</span>
+                      <a href="${file.link}" class="Lihat-btn-portal" target="_blank" rel="noopener noreferrer">Lihat</a>
+                  </div>
+              `;
+              fileContainerPortal.appendChild(fileCard);
+          });
+      }
+
+      // Event listener untuk tab navigasi
+      navTabsPortal.forEach(tab => {
+          tab.addEventListener('click', function() {
+              // Update active tab
+              navTabsPortal.forEach(t => t.classList.remove('active'));
+              this.classList.add('active');
+              
+              // Update content
+              const category = this.getAttribute('data-category');
+              currentCategoryPortal.textContent = this.textContent;
+              
+              renderFiles(category);
+          });
+      });
+
+      // Render file pedoman akademik secara default saat halaman dimuat
+      renderFiles('pedoman');
   });
 </script>
 </body>
