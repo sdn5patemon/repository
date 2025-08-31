@@ -72,25 +72,40 @@
         }
         
         .student-table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-        
-        .student-table th {
-            background-color: #f1f5f9;
-            padding: 12px;
-            text-align: left;
-            font-weight: 600;
-        }
-        
-        .student-table td {
-            padding: 12px;
-            border-bottom: 1px solid #e2e8f0;
-        }
-        
-        .student-table tr:hover {
-            background-color: #f8fafc;
-        }
+      width: 80%; /* biar tidak terlalu melebar */
+      margin: 0 auto; /* posisikan tabel di tengah halaman */
+      border-collapse: collapse;
+      text-align: center; /* rata tengah semua isi sel */
+  }
+
+  .student-table th {
+      background-color: #f1f5f9;
+      padding: 12px;
+      font-weight: 600;
+      text-align: left; /* header juga rata tengah */
+  }
+
+  .student-table td {
+      padding: 12px;
+      border-bottom: 1px solid #e2e8f0;
+      text-align: left; /* isi tabel rata tengah */
+  }
+
+  .student-table tr:nth-child(even) {
+      background-color: #f9f9f9;
+  }
+
+  .student-table tr:hover {
+      background-color: #f1f8ff;
+  }
+
+  /* Responsive di HP */
+  @media (max-width: 640px) {
+    .student-table {
+      width: 100%;
+      font-size: 14px;
+    }
+  }
     </style>
 </head>
 <body class="bg-gray-50">
@@ -224,13 +239,13 @@
 </div>
 </section>
 <!-- About Section -->
-<section class="py-20 bg-white">
-<div class="container mx-auto px-6">
-<div class="text-center mb-16">
-<h2 class="text-3xl md:text-4xl font-bold text-gray-800 mb-4">Tentang Sekolah</h2>
-<p class="text-lg text-gray-600 max-w-3xl mx-auto">SESUAIKAN DENGAN KONTEN</p>
-</div>
-</div>
+<section class="py-20 bg-gray-50" id="data-siswa">
+  <div class="container mx-auto px-6">
+    <h2 class="text-3xl font-bold text-gray-800 mb-6 text-center">Data Guru dan Tenaga Kependidikan</h2>
+    <div class="table-container overflow-x-auto">
+      <table id="studentTable" class="student-table rounded-lg shadow-lg"></table>
+    </div>
+  </div>
 </section>
 
 <!-- Footer -->
@@ -276,21 +291,65 @@
 </footer>
 
 <script>
-  // Toggle menu mobile
+  // ======== FETCH DATA DARI GOOGLE SHEETS ========
+  const sheetURL = "https://script.google.com/macros/s/AKfycbwFBWi4RKTWAu2NoZbpim91K0-TfeCrnVGBKwcFN6X_KHHlaiaqxSSWr9G_2_BshjQp/exec"; // ganti dengan URL Web App dari Apps Script
+
+  async function loadData() {
+    try {
+      const response = await fetch(sheetURL);
+      const data = await response.json();
+
+      let table = document.getElementById("studentTable");
+
+      if (!data || data.length === 0) {
+        table.innerHTML = "<tr><td>Tidak ada data</td></tr>";
+        return;
+      }
+
+      // Buat header tabel
+      let headers = Object.keys(data[0]);
+      let thead = "<thead><tr>";
+      headers.forEach(h => {
+        thead += `<th>${h}</th>`;
+      });
+      thead += "</tr></thead>";
+
+      // Buat body tabel
+      let tbody = "<tbody>";
+      data.forEach(row => {
+        tbody += "<tr>";
+        headers.forEach(h => {
+          tbody += `<td>${row[h] ?? ""}</td>`;
+        });
+        tbody += "</tr>";
+      });
+      tbody += "</tbody>";
+
+      table.innerHTML = thead + tbody;
+    } catch (err) {
+      console.error("Error loading data:", err);
+      document.getElementById("studentTable").innerHTML =
+        "<tr><td>Gagal memuat data</td></tr>";
+    }
+  }
+
+  loadData();
+
+  // ======== SCRIPT MENU NAVIGATION (asli dari file kamu) ========
   const menuToggle = document.getElementById("menuToggle");
   const menuMobile = document.getElementById("menuMobile");
 
-  menuToggle.addEventListener("click", () => {
-    menuMobile.classList.toggle("hidden");
-  });
+  if(menuToggle){
+    menuToggle.addEventListener("click", () => {
+      menuMobile.classList.toggle("hidden");
+    });
+  }
 
-  
   function toggleDropdown(id) {
     const menu = document.getElementById(id);
     menu.classList.toggle("hidden");
   }
 
-  // Dropdown desktop hover
   document.querySelectorAll('.group').forEach(group => {
     group.addEventListener('mouseenter', function() {
       this.querySelector('.dropdown-menu').classList.add('show');
