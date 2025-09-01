@@ -335,7 +335,7 @@
       data.forEach((f, i) => {
         const tr = document.createElement("tr");
         tr.innerHTML = `
-          <td class="text-center">${i + 1}</td>
+          <td class="text-left">${i + 1}</td>
           <td>${escapeHtml(f.nama)}</td>
           <td>${f.tanggal || '-'}</td>
           <td><a href="${f.download || f.view}" target="_blank" class="text-blue-600 hover:underline">Download</a></td>
@@ -357,5 +357,6 @@
 
 </body>
 </html>
+
 
 
