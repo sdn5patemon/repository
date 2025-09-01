@@ -71,26 +71,6 @@
             color: #008d13;
         }
         
-        .student-table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-        
-        .student-table th {
-            background-color: #f1f5f9;
-            padding: 12px;
-            text-align: left;
-            font-weight: 600;
-        }
-        
-        .student-table td {
-            padding: 12px;
-            border-bottom: 1px solid #e2e8f0;
-        }
-        
-        .student-table tr:hover {
-            background-color: #f8fafc;
-        }
     </style>
 </head>
 <body class="bg-gray-50">
@@ -223,15 +203,42 @@
 <h2 class="text-4xl md:text-6xl font-bold mb-6">Arsip</h2>
 </div>
 </section>
-<!-- About Section -->
-<section class="py-20 bg-white">
-<div class="container mx-auto px-6">
-<div class="text-center mb-16">
-<h2 class="text-3xl md:text-4xl font-bold text-gray-800 mb-4">Tentang Sekolah</h2>
-<p class="text-lg text-gray-600 max-w-3xl mx-auto">SESUAIKAN DENGAN KONTEN</p>
-</div>
-</div>
-</section>
+<!-- Arsip Section -->
+<section class="py-20 bg-white" id="arsip">
+  <div class="container mx-auto px-6">
+  <div class="text-center mb-16">
+  <h2 class="text-3xl md:text-4xl font-bold text-gray-800 mb-4">📂 Arsip Administrasi Sekolah</h2>
+  <p class="text-lg text-gray-600 max-w-3xl mx-auto">
+              Semua guru bisa upload file dan akan muncul pada daftar arsip di bawah. 
+            </p>
+  <a href="https://forms.gle/odCeEBsezBWucb3W7" target="_blank" 
+   style="display:inline-block; padding:10px 20px; background:#4CAF50; color:white; text-decoration:none; border-radius:5px;">
+   Upload File Disini
+</a>
+
+  </div>
+  <div class="bg-gray-50 rounded-2xl p-8 shadow-md">
+  <h3 class="text-2xl font-bold mb-6 text-center">Daftar Arsip</h3>
+  <div class="overflow-x-auto">
+  <table class="student-table w-full text-left">
+  <thead>
+  <tr>
+  <th>No</th>
+  <th>Nama File</th>
+  <th>Tanggal Upload</th>
+  <th>Link</th>
+  </tr>
+  </thead>
+  <tbody id="arsipTable">
+  <tr>
+  <td class="text-center text-gray-500" colspan="3">Memuat data...</td>
+  </tr>
+  </tbody>
+  </table>
+  </div>
+  </div>
+  </div>
+  </section>
 
 <!-- Footer -->
 <footer class="bg-gray-800 text-white py-12" id="Informasi">
@@ -311,5 +318,37 @@
     });
   });
 </script>
+
+<!-- Script Arsip -->
+<script>
+  const apiUrl = "https://script.google.com/macros/s/AKfycbwQqFgnl3N3IDi8pHJ7p_-Siv0nIV64CdBeDPoSwphM9fNw7SQWPZtpLzauqVjTQpKy/exec"; // ganti dengan URL web app kamu
+
+  fetch(apiUrl)
+    .then(res => res.json())
+    .then(data => {
+      const table = document.getElementById("arsipTable");
+      table.innerHTML = "";
+      if (data.length === 0) {
+        table.innerHTML = `<tr><td colspan="4" class="text-center text-gray-500">Belum ada file diunggah.</td></tr>`;
+        return;
+      }
+      data.forEach((file, index) => {
+        let row = document.createElement("tr");
+        row.innerHTML = `
+          <td>${index + 1}</td>
+          <td>${file.nama}</td>
+          <td>${file.tanggal}</td>
+          <td><a href="${file.link}" target="_blank" class="text-blue-600 hover:underline">Download</a></td>
+        `;
+        table.appendChild(row);
+      });
+    })
+    .catch(err => {
+      document.getElementById("arsipTable").innerHTML = 
+        `<tr><td colspan="4" class="text-center text-red-500">Gagal memuat data.</td></tr>`;
+      console.error(err);
+    });
+</script>
+
 </body>
 </html>
