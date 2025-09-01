@@ -321,15 +321,15 @@
 
 <!-- Script Arsip -->
 <script>
-  const apiUrl = "https://script.google.com/macros/s/AKfycbwQqFgnl3N3IDi8pHJ7p_-Siv0nIV64CdBeDPoSwphM9fNw7SQWPZtpLzauqVjTQpKy/exec"; // URL Web App terbaru
+  const apiUrl = "https://script.google.com/macros/s/AKfycbwQqFgnl3N3IDi8pHJ7p_-Siv0nIV64CdBeDPoSwphM9fNw7SQWPZtpLzauqVjTQpKy/exec"; // dari deployment terbaru
 
   fetch(apiUrl)
-    .then(res => res.json())
+    .then(r => r.json())
     .then(data => {
-      const table = document.getElementById("arsipTable");
-      table.innerHTML = "";
+      const tbody = document.getElementById("arsipTable");
+      tbody.innerHTML = "";
       if (!data.length) {
-        table.innerHTML = `<tr><td colspan="4" class="text-center text-gray-500">Belum ada file diunggah.</td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="4" class="text-center text-gray-500">Belum ada file diunggah.</td></tr>`;
         return;
       }
       data.forEach((f, i) => {
@@ -338,15 +338,17 @@
           <td class="text-left">${i + 1}</td>
           <td>${escapeHtml(f.nama)}</td>
           <td>${f.tanggal || '-'}</td>
-          <td><a href="${f.download || f.view}" target="_blank" class="text-blue-600 hover:underline">Download</a></td>
+          <td>
+            <a href="${f.download || f.view}" target="_blank" class="text-blue-600 hover:underline">Download</a>
+          </td>
         `;
-        table.appendChild(tr);
+        tbody.appendChild(tr);
       });
     })
     .catch(err => {
+      console.error(err);
       document.getElementById("arsipTable").innerHTML =
         `<tr><td colspan="4" class="text-center text-red-500">Gagal memuat data.</td></tr>`;
-      console.error(err);
     });
 
   function escapeHtml(s) {
@@ -354,10 +356,5 @@
   }
 </script>
 
-
 </body>
 </html>
-
-
-
-
