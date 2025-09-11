@@ -306,34 +306,36 @@
 </section>
 <!-- Arsip Section -->
 <section class="py-20 bg-white" id="arsip">
-<div class="container mx-auto px-6">
-<div class="text-center mb-16">
-<h2 class="text-3xl md:text-4xl font-bold text-gray-800 mb-4">📂 Arsip Administrasi Sekolah</h2>
-<p class="text-lg text-gray-600 max-w-3xl mx-auto">
-            Semua guru bisa upload file ke Google Drive, daftar akan muncul otomatis di sini.
-          </p>
-</div>
-<div class="bg-gray-50 rounded-2xl p-8 shadow-md">
-<h3 class="text-2xl font-bold mb-6 text-center">Daftar Arsip</h3>
-<div class="overflow-x-auto">
-<table class="student-table w-full text-left">
-<thead>
-<tr>
-<th>No</th>
-<th>Nama File</th>
-<th>Link</th>
-</tr>
-</thead>
-<tbody id="arsipTable">
-<tr>
-<td class="text-center text-gray-500" colspan="3">Memuat data...</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
-</div>
-</section>
+  <div class="container mx-auto px-6">
+  <div class="text-center mb-16">
+  <h2 class="text-3xl md:text-4xl font-bold text-gray-800 mb-4">📂 Arsip Administrasi Sekolah</h2>
+  <p class="text-lg text-gray-600 max-w-3xl mx-auto">
+              Semua guru bisa upload file pada menu Arsip Administrasi.
+            </p>
+  
+  </div>
+  <div class="bg-gray-50 rounded-2xl p-8 shadow-md">
+  <h3 class="text-2xl font-bold mb-6 text-center">Daftar Arsip</h3>
+  <div class="overflow-x-auto">
+  <table class="student-table w-full text-left">
+  <thead>
+  <tr>
+  <th>No</th>
+  <th>Nama File</th>
+  <th>Tanggal Upload</th>
+  <th>Link</th>
+  </tr>
+  </thead>
+  <tbody id="arsipTable">
+  <tr>
+  <td class="text-center text-gray-500" colspan="4">Memuat data...</td>
+  </tr>
+  </tbody>
+  </table>
+  </div>
+  </div>
+  </div>
+  </section>
 <!-- Footer -->
 <footer class="bg-gray-800 text-white py-12" id="Informasi">
 <div class="container mx-auto px-6">
@@ -415,35 +417,40 @@
 
 <!-- Script Arsip -->
 <script>
-      const apiUrl = "https://script.google.com/macros/s/AKfycbzXFL5UWrGvBKfXOl0bDzLgVOD1c5tt2xDzDN7KQMuhBCU7eEAbIMXOH52akLLh-3Do7w/exec"; // Ganti dengan URL Apps Script
+  const apiUrl = "https://script.google.com/macros/s/AKfycbwQqFgnl3N3IDi8pHJ7p_-Siv0nIV64CdBeDPoSwphM9fNw7SQWPZtpLzauqVjTQpKy/exec"; // dari deployment terbaru
 
-      fetch(apiUrl)
-        .then(res => res.json())
-        .then(data => {
-          const table = document.getElementById("arsipTable");
-          table.innerHTML = "";
-          if (data.length === 0) {
-            table.innerHTML = `<tr><td colspan="3" class="text-center text-gray-500">Belum ada file diunggah.</td></tr>`;
-            return;
-          }
-          data.forEach((file, index) => {
-            let row = document.createElement("tr");
-            row.innerHTML = `
-              <td>${index + 1}</td>
-              <td>${file.name}</td>
-              <td>
-                <a href="${file.view}" target="_blank" class="text-blue-600 hover:underline">Lihat</a>
-              </td>
-            `;
-            table.appendChild(row);
-          });
-        })
-        .catch(err => {
-          document.getElementById("arsipTable").innerHTML = 
-            `<tr><td colspan="3" class="text-center text-red-500">Gagal memuat data.</td></tr>`;
-          console.error(err);
-        });
-    </script>
+  fetch(apiUrl)
+    .then(r => r.json())
+    .then(data => {
+      const tbody = document.getElementById("arsipTable");
+      tbody.innerHTML = "";
+      if (!data.length) {
+        tbody.innerHTML = `<tr><td colspan="4" class="text-center text-gray-500">Belum ada file diunggah.</td></tr>`;
+        return;
+      }
+      data.forEach((f, i) => {
+        const tr = document.createElement("tr");
+        tr.innerHTML = `
+          <td class="text-left">${i + 1}</td>
+          <td>${escapeHtml(f.nama)}</td>
+          <td>${f.tanggal || '-'}</td>
+          <td>
+            <a href="${f.download || f.view}" target="_blank" class="text-blue-600 hover:underline">Download</a>
+          </td>
+        `;
+        tbody.appendChild(tr);
+      });
+    })
+    .catch(err => {
+      console.error(err);
+      document.getElementById("arsipTable").innerHTML =
+        `<tr><td colspan="4" class="text-center text-red-500">Gagal memuat data.</td></tr>`;
+    });
+
+  function escapeHtml(s) {
+    return String(s).replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+  }
+</script>
 
 <!-- Script Data Siswa -->
 <script>
