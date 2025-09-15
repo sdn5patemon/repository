@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Administrasi Kelas 6</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Crimson+Pro:wght@400;600&family=Noto+Serif:wght@400;700&display=swap');
+        
+        body {
+            font-family: 'Noto Serif', serif;
+            background-color: #f8f3e9;
+            background-image: 
+                linear-gradient(rgba(222, 204, 173, 0.2) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(222, 204, 173, 0.2) 1px, transparent 1px);
+            background-size: 20px 20px;
+            color: #3c2f1e;
+        }
+        
+        .journal-border {
+            border: 1px solid #d1c0a5;
+            box-shadow: 
+                0 0 10px rgba(0, 0, 0, 0.05),
+                inset 0 0 20px rgba(189, 166, 126, 0.1);
+        }
+        
+        .paper-texture {
+            background-color: #fefcf6;
+            background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM12 86c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm28-65c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm23-11c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-6 60c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm29 22c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zM32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm57-13c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-9-21c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM60 91c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM35 41c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM12 60c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2z' fill='%23d1c0a5' fill-opacity='0.1' fill-rule='evenodd'/%3E%3C/svg%3E");
+        }
+        
+        .decorative-line {
+            height: 1px;
+            background: linear-gradient(to right, transparent 0%, #d1c0a5 20%, #d1c0a5 80%, transparent 100%);
+        }
+        
+        .folder-tab {
+            position: relative;
+            border-radius: 5px 5px 0 0;
+            padding: 8px 15px;
+            margin-right: 10px;
+            background-color: #e8ddca;
+            box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.05);
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .folder-tab.active {
+            background-color: #fefcf6;
+            box-shadow: 0 -3px 5px rgba(0, 0, 0, 0.05);
+            z-index: 10;
+        }
+        
+        .file-card {
+            transition: all 0.3s;
+            border-left: 4px solid transparent;
+        }
+        
+        .file-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            border-left: 4px solid #c17c54;
+        }
+        
+        .paper-clip {
+            position: absolute;
+            top: -10px;
+            right: 20px;
+            width: 20px;
+            height: 30px;
+            background-color: #c2b8a6;
+            border-radius: 50% 50% 0 0;
+            transform: rotate(45deg);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+        
+        .stamp {
+            position: absolute;
+            bottom: 15px;
+            right: 15px;
+            width: 70px;
+            height: 70px;
+            border: 2px dashed #c17c54;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0.4;
+            transform: rotate(15deg);
+        }
+    </style>
+</head>
+<body class="py-8 px-4">
+    <!-- Navbar -->
+<nav class="max-w-6xl mx-auto mb-6">
+    <div class="flex justify-between items-center bg-amber-800 text-black px-6 py-3 rounded-lg shadow">
+      <a href="index.html" class="font-bold text-lg hover:text-yellow-300">
+        <i class="fas fa-home mr-2"></i> Home
+      </a>
+    </div>
+  </nav>
+  
+    <div class="max-w-6xl mx-auto">
+        <!-- Header dengan desain jurnal -->
+        <header class="paper-texture journal-border rounded-lg p-8 mb-8 relative overflow-hidden">
+            <div class="absolute top-0 left-0 w-4 h-full bg-gradient-to-r from-amber-900/5 to-transparent"></div>
+            <h1 class="text-4xl font-bold text-center mb-2" style="font-family: 'Crimson Pro', serif;">
+                <i class="fas fa-book-open mr-3 text-amber-800"></i>Administrasi Kelas 6
+            </h1>
+            <p class="text-center text-amber-700 mb-6">Kumpulan dokumen dan catatan penting yang terorganisir rapi</p>
+            
+            <div class="decorative-line my-6"></div>
+        </header>
+
+        <!-- Konten utama: Daftar file -->
+        <main class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <!-- File 1 -->
+            <div class="paper-texture journal-border rounded-lg p-5 file-card relative">
+                <div class="paper-clip"></div>
+                <div class="flex items-start mb-4">
+                    <div class="bg-green-100 p-3 rounded-lg mr-4">
+                        <i class="fas fa-file-excel text-green-600 text-2xl"></i>
+                        <!-- <i class="fas fa-file-pdf text-amber-700 text-2xl"></i> -->
+                    </div>
+                    <div>
+                        <a href="https://drive.google.com/drive/folders/1wy_ngdVnWZ9cPTa_MVBglFKukZJIpcCb?usp=sharing" target="_blank" rel="noopener noreferrer" class="font-semibold text-amber-900 hover:underline">
+                            PROTA (Program Tahunan)
+                        </a>                        
+                    </div>
+                </div>
+                <p class="text-amber-700 mb-4 text-sm">Gambaran materi selama 1 tahun yang memuat semua mata pelajaran.</p>
+                <div class="flex justify-between items-center">
+                    <span class="text-xs bg-green-100 text-green-700 py-1 px-3 rounded-full">XLSX • 1.4 MB</span>
+                    <div class="flex space-x-2">
+                        <button class="text-amber-600 hover:text-amber-800"><i class="fas fa-book-open"></i></button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- File 2 -->
+            <div class="paper-texture journal-border rounded-lg p-5 file-card relative">
+                <div class="paper-clip"></div>
+                <div class="flex items-start mb-4">
+                    <div class="bg-green-100 p-3 rounded-lg mr-4">
+                        <i class="fas fa-file-excel text-green-600 text-2xl"></i>
+                        <!-- <i class="fas fa-file-image text-blue-600 text-2xl"></i> -->
+                    </div>
+                    <div>
+                        <a href="https://drive.google.com/drive/folders/1igouuPUtS_mCBBHzq6Rx7fA7LC98xYMK?usp=sharing" target="_blank" rel="noopener noreferrer" class="font-semibold text-amber-900 hover:underline">
+                            PROMES (Program Semester)
+                        </a>
+                    </div>
+                </div>
+                <p class="text-amber-700 mb-4 text-sm">Rincian materi disetiap semester dengan analisis melalui Tujuan Pembelajaran.</p>
+                <div class="flex justify-between items-center">
+                    <span class="text-xs bg-green-100 text-green-700 py-1 px-3 rounded-full">XLSX • 1.8 MB</span>
+                    <div class="flex space-x-2">
+                        <button class="text-amber-600 hover:text-amber-800"><i class="fas fa-book-open"></i></button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- File 3 -->
+            <div class="paper-texture journal-border rounded-lg p-5 file-card relative">
+                <div class="paper-clip"></div>
+                <div class="flex items-start mb-4">
+                    <div class="bg-blue-100 p-3 rounded-lg mr-4">
+                        <i class="fas fa-file-word text-blue-600 text-2xl"></i>
+                    </div>
+                    <div>
+                        <a href="https://drive.google.com/drive/folders/1Y8thX6Pf1rejRJwhT-b3sJzWhEltHmNh?usp=drive_link" target="_blank" rel="noopener noreferrer" class="font-semibold text-amber-900 hover:underline">
+                            RPP / MODUL AJAR
+                        </a>
+                    </div>
+                </div>
+                <p class="text-amber-700 mb-4 text-sm">Rancangan pelaksanaan pembelajaran harian yang disusun sesuai kurikulum terbaru.</p>
+                <div class="flex justify-between items-center">
+                    <span class="text-xs bg-blue-100 text-blue-700 py-1 px-3 rounded-full">DOCX • 3.2 MB</span>
+                    <div class="flex space-x-2">
+                        <button class="text-amber-600 hover:text-amber-800"><i class="fas fa-book-open"></i></button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- File 4 -->
+            <div class="paper-texture journal-border rounded-lg p-5 file-card relative">
+                <div class="paper-clip"></div>
+                <div class="flex items-start mb-4">
+                    <div class="bg-green-100 p-3 rounded-lg mr-4">
+                        <i class="fas fa-file-excel text-green-600 text-2xl"></i>
+                    </div>
+                    <div>
+                        <a href="https://docs.google.com/spreadsheets/d/1Y_-dvFi6ss-4OqFtC3_Ek9YJE1OYvqkqM5H7lFKAFWM/edit?usp=sharing" target="_blank" rel="noopener noreferrer" class="font-semibold text-amber-900 hover:underline">
+                            Daftar Siswa
+                        </a>
+                    </div>
+                </div>
+                <p class="text-amber-700 mb-4 text-sm">Daftar siswa berisi identitas siswa pada tahun ajaran 2025-2026.</p>
+                <div class="flex justify-between items-center">
+                    <span class="text-xs bg-green-100 text-green-700 py-1 px-3 rounded-full">XLSX • 4.1 MB</span>
+                    <div class="flex space-x-2">
+                        <button class="text-amber-600 hover:text-amber-800"><i class="fas fa-book-open"></i></button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- File 5 -->
+            <div class="paper-texture journal-border rounded-lg p-5 file-card relative">
+                <div class="paper-clip"></div>
+                <div class="flex items-start mb-4">
+                    <div class="bg-green-100 p-3 rounded-lg mr-4">
+                        <i class="fas fa-file-excel text-green-600 text-2xl"></i>
+                    </div>
+                    <div>
+                        <a href="https://drive.google.com/drive/folders/1aXkSMAdXK9Q0c6fAJxMQXnxVSjyTgXXR?usp=drive_link" target="_blank" rel="noopener noreferrer" class="font-semibold text-amber-900 hover:underline">
+                            Daftar Nilai
+                        </a>
+                    </div>
+                </div>
+                <p class="text-amber-700 mb-4 text-sm">Daftar nilai berisi rekap nilai formatif, sumatif, PAT, dan PAS.</p>
+                <div class="flex justify-between items-center">
+                    <span class="text-xs bg-green-100 text-green-700 py-1 px-3 rounded-full">XLSX • 3.7 MB</span>
+                    <div class="flex space-x-2">
+                        <button class="text-amber-600 hover:text-amber-800"><i class="fas fa-book-open"></i></button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- File 6 -->
+            <div class="paper-texture journal-border rounded-lg p-5 file-card relative">
+                <div class="paper-clip"></div>
+                <div class="flex items-start mb-4">
+                    <div class="bg-yellow-100 p-3 rounded-lg mr-4">
+                        <i class="fas fa-file-archive text-yellow-600 text-2xl"></i>
+                    </div>
+                    <div>
+                        <a href="https://drive.google.com/drive/folders/10t1ZrX8rzb961U5YvPfoOAf4YFKqzyvo?usp=drive_link" target="_blank" rel="noopener noreferrer" class="font-semibold text-amber-900 hover:underline">
+                            Hasil Belajar Siswa
+                        </a>
+                    </div>
+                </div>
+                <p class="text-amber-700 mb-4 text-sm">Kumpulan dokumen akhir semester / kenaikan kelas siswa.</p>
+                <div class="flex justify-between items-center">
+                    <span class="text-xs bg-yellow-100 text-yellow-700 py-1 px-3 rounded-full">ZIP • 8.4 MB</span>
+                    <div class="flex space-x-2">
+                        <button class="text-amber-600 hover:text-amber-800"><i class="fas fa-book-open"></i></button>
+                    </div>
+                </div>
+            </div>
+        </main>
+        
+        <!-- Footer dengan desain jurnal -->
+        <footer class="paper-texture journal-border rounded-lg p-6 mt-8 text-center relative">
+            <div class="stamp">
+                <span class="text-xs font-bold text-amber-700">PESONA</span>
+            </div>
+            <p class="text-amber-700">Wali Kelas VI : Kadek Dana Handika, S.Pd.Gr.</p>
+            <div class="flex justify-center space-x-4 mt-4">
+                <a href="https://www.facebook.com/share/17Hi9Y3TPF/" class="text-amber-600 hover:text-amber-800"><i class="fab fa-facebook-f"></i> Dana Handika</a>
+                <a href="https://www.instagram.com/dekhdana?igsh=MXMzaXV5Y2JiMDZzbA==" class="text-amber-600 hover:text-amber-800"><i class="fab fa-instagram"></i> Dana Handika</a>
+                <a href="https://wa.me/qr/MEL2FT3WO3LJP1" class="text-amber-600 hover:text-amber-800"><i class="fab fa-file-image"></i> 087760147357</a>
+            </div>
+        </footer>
+    </div>
+
+    <script>
+       
+    </script>
+</body>
+</html>
