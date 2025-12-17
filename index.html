@@ -136,7 +136,8 @@
       <div class="hidden md:flex space-x-8 items-center" id="menuDesktop">
         <!-- Beranda Dropdown -->
         <div class="relative group">
-          <button class="text-green-600 font-semibold hover:text-green-800 flex items-center dropdown-toggle">
+          <a href="index.html"
+             class="text-gray-700 hover:text-green-600 flex items-center">
             Beranda <i class="fas fa-chevron-down ml-1 text-sm"></i>
           </button>
           <div class="dropdown-menu">
@@ -181,7 +182,18 @@
             <a class="dropdown-item" href="map.html">Maps</a>
           </div>
         </div>
-      </div>
+
+        <!-- Perpustakaan -->
+        <div class="relative group">
+          <button class="text-gray-700 hover:text-green-600 flex items-center dropdown-toggle">
+            Perpustakaan <i class="fas fa-chevron-down ml-1 text-sm"></i>
+          </button>
+          <div class="dropdown-menu">
+            <a class="dropdown-item" href="absen_perpus.html" target="_blank">Absen Pengunjung</a>
+            <a class="dropdown-item" href="perpustakaan.html" target="_blank">Daftar Buku</a>
+            <a class="dropdown-item" href="#">Daftar Pengunjung</a>
+          </div>
+        </div>
 
       <!-- Tombol Hamburger (Mobile) -->
       <button id="menuToggle" class="md:hidden text-gray-700 focus:outline-none">

@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <title>Sistem Absen Perpustakaan</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://unpkg.com/html5-qrcode"></script>
+  <style>
+    body {font-family: Arial, sans-serif; background:#f4f6f8; margin:0; padding:0}
+    .container {max-width:600px; margin:30px auto; background:#fff; padding:20px; border-radius:8px; box-shadow:0 4px 10px rgba(0,0,0,.1)}
+    h2 {text-align:center}
+    #reader {width:100%; margin:15px auto}
+    input, button {width:100%; padding:12px; margin-top:10px; font-size:16px}
+    button {background:#007bff; color:#fff; border:none; border-radius:5px; cursor:pointer}
+    button:hover {background:#0056b3}
+    table {width:100%; border-collapse:collapse; margin-top:15px; font-size:14px}
+    th, td {border:1px solid #ddd; padding:8px; text-align:center}
+    th {background:#f0f0f0}
+    .success {color:green; text-align:center; margin-top:10px}
+    .error {color:red; text-align:center; margin-top:10px}
+  </style>
+</head>
+<body>
+<div class="container">
+  <h2>Daftar Pengunjung</h2>
+
+  <!-- Kamera Android -->
+  <div id="reader"></div>
+
+  <input type="text" id="barcode" placeholder="Barcode otomatis dari kamera" readonly>
+
+  <div id="msg"></div>
+
+  <table id="tabelAbsen">
+    <thead>
+      <tr>
+        <th>Nama</th>
+        <th>Kelas</th>
+        <th>Tanggal</th>
+        <th>Jam</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+
+  <button onclick="downloadExcel()" style="background:#28a745">Download Excel</button>
+</div>
+
+<script>
+let dataAbsen = [];
+
+function tanggalHariIni() {
+  return new Date().toISOString().slice(0,10);
+}
+
+function sudahAbsen(nama, kelas) {
+  return dataAbsen.some(d => d.nama === nama && d.kelas === kelas && d.tanggal === tanggalHariIni());
+}
+
+function simpanAbsen(barcode) {
+  const msg = document.getElementById('msg');
+  msg.innerHTML = '';
+
+  if (!barcode.includes('|')) {
+    msg.innerHTML = '<div class="error">Format barcode salah</div>';
+    return;
+  }
+
+  const [nama, kelas] = barcode.split('|');
+
+  if (sudahAbsen(nama, kelas)) {
+    msg.innerHTML = '<div class="error">Siswa sudah absen hari ini</div>';
+    return;
+  }
+
+  const now = new Date();
+  const record = {
+    nama: nama.trim(),
+    kelas: kelas.trim(),
+    tanggal: tanggalHariIni(),
+    jam: now.toTimeString().slice(0,8)
+  };
+
+  dataAbsen.push(record);
+
+  const tbody = document.querySelector('#tabelAbsen tbody');
+  const row = tbody.insertRow();
+  row.insertCell().innerText = record.nama;
+  row.insertCell().innerText = record.kelas;
+  row.insertCell().innerText = record.tanggal;
+  row.insertCell().innerText = record.jam;
+
+  msg.innerHTML = '<div class="success">Absen berhasil</div>';
+}
+
+function downloadExcel() {
+  if (dataAbsen.length === 0) return alert('Data kosong');
+
+  let csv = 'Nama,Kelas,Tanggal,Jam\n';
+  dataAbsen.forEach(d => {
+    csv += `${d.nama},${d.kelas},${d.tanggal},${d.jam}\n`;
+  });
+
+  const blob = new Blob([csv], {type:'text/csv'});
+  const link = document.createElement('a');
+  link.href = URL.createObjectURL(blob);
+  link.download = 'absen_perpustakaan.csv';
+  link.click();
+}
+
+// AKTIFKAN KAMERA ANDROID
+const qr = new Html5Qrcode("reader");
+qr.start(
+  { facingMode: "environment" },
+  { fps: 10, qrbox: 250 },
+  (text) => {
+    document.getElementById('barcode').value = text;
+    simpanAbsen(text);
+  }
+);
+</script>
+</body>
+</html>

@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LibSchool - Perpustakaan Sekolah</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script>
+    <style>
+        body { background-color: #f8f9fa; }
+        .book-card { margin-bottom: 20px; }
+        .navbar { background-color: #007bff; }
+        .navbar-brand, .nav-link { color: white !important; }
+        .book-title { cursor: pointer; color: #007bff; }
+        .book-title:hover { text-decoration: underline; }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg">
+        <div class="container">
+            <a class="navbar-brand" href="#">Giri Widya LibSchool</a>
+            <div class="navbar-nav ms-auto">
+                <a class="nav-link" href="index.html"><i class="bi bi-book" style="font-size: 1.5rem;"></i></a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-4">
+        <div id="home" class="page">
+            <h2>Daftar Buku Tersedia</h2>
+            <button class="btn btn-success mb-3" onclick="showAddBookForm()">Tambah Buku</button>
+            <div class="row">
+                <div class="col-md-8">
+                    <input type="text" id="search" class="form-control mb-3" placeholder="Cari berdasarkan judul atau penulis" onkeyup="searchBooks()">
+                    <div id="bookList" class="row"></div>
+                    <nav aria-label="Pagination Buku">
+                        <ul class="pagination justify-content-center" id="pagination"></ul>
+                    </nav>
+                </div>
+                <div class="col-md-4">
+                    <!-- <h4>Diagram Jenis Buku</h4> -->
+                    <canvas id="bookChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <div id="detail" class="page" style="display:none;">
+            <h2>Detail Buku</h2>
+            <div id="bookDetail" class="card">
+                <div class="card-body">
+                    <h5 class="card-title" id="detailTitle"></h5>
+                    <p class="card-text"><strong>Penulis:</strong> <span id="detailAuthor"></span></p>
+                    <p class="card-text"><strong>Tahun Terbit:</strong> <span id="detailYear"></span></p>
+                    <p class="card-text"><strong>Jumlah Halaman:</strong> <span id="detailPages"></span></p>
+                    <p class="card-text"><strong>Jenis Buku:</strong> <span id="detailType"></span></p>
+                    <button class="btn btn-secondary" onclick="showPage('home')">Kembali</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal untuk Tambah Buku -->
+    <div class="modal fade" id="addBookModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Tambah Buku Baru</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="addBookForm">
+                        <div class="mb-3">
+                            <label>Judul:</label>
+                            <input type="text" id="newTitle" class="form-control" required>
+                        </div>
+                        <div class="mb-3">
+                            <label>Penulis:</label>
+                            <input type="text" id="newAuthor" class="form-control" required>
+                        </div>
+                        <div class="mb-3">
+                            <label>Tahun Terbit:</label>
+                            <input type="number" id="newYear" class="form-control" required min="1000" max="2100">
+                        </div>
+                        <div class="mb-3">
+                            <label>Jumlah Halaman:</label>
+                            <input type="number" id="newPages" class="form-control" required min="1">
+                        </div>
+                        <div class="mb-3">
+                            <label>Jenis Buku:</label>
+                            <select id="newType" class="form-control" required>
+                                <option value="">Pilih Jenis</option>
+                                <option value="Buku Pelajaran">Buku Pelajaran</option>
+                                <option value="Buku Cerita">Buku Cerita</option>
+                                <option value="Majalah">Majalah</option>
+                                <option value="Koran">Koran</option>
+                                <option value="Ensiklopedia">Ensiklopedia</option>
+                            </select>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Tambah Buku</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Data buku awal dengan detail tambahan
+        let books = JSON.parse(localStorage.getItem('books')) || [
+            { id: 1, title: 'Harry Potter', author: 'J.K. Rowling', year: 1997, pages: 320, type: 'Buku Cerita' },
+            { id: 2, title: 'The Hobbit', author: 'J.R.R. Tolkien', year: 1937, pages: 310, type: 'Buku Cerita' },
+            { id: 3, title: '1984', author: 'George Orwell', year: 1949, pages: 328, type: 'Buku Cerita' },
+            { id: 4, title: 'Matematika Dasar', author: 'Tim Pengajar', year: 2020, pages: 150, type: 'Buku Pelajaran' },
+            { id: 5, title: 'Matematika Lanjutan', author: 'Tim Pengajar', year: 2021, pages: 200, type: 'Buku Pelajaran' },
+            { id: 6, title: 'National Geographic', author: 'Redaksi NatGeo', year: 2023, pages: 80, type: 'Majalah' },
+            { id: 7, title: 'Time Magazine', author: 'Redaksi Time', year: 2023, pages: 60, type: 'Majalah' },
+            { id: 8, title: 'Kompas', author: 'Redaksi Kompas', year: 2023, pages: 20, type: 'Koran' }
+        ];
+
+        let chart; // Variabel untuk menyimpan chart
+        let currentPage = 1; // Halaman saat ini
+        const booksPerPage = 20; // Jumlah buku per halaman
+        let filteredBooks = books; // Buku yang difilter (untuk pencarian)
+
+        // Fungsi untuk menghitung jumlah buku per jenis
+        function getBookTypeCounts(bookArray = books) {
+            const counts = {};
+            bookArray.forEach(book => {
+                counts[book.type] = (counts[book.type] || 0) + 1;
+            });
+            return counts;
+        }
+
+        // Fungsi untuk membuat/update diagram
+        function updateChart(bookArray = books) {
+            const counts = getBookTypeCounts(bookArray);
+            const labels = Object.keys(counts);
+            const data = Object.values(counts);
+
+            if (chart) {
+                chart.destroy(); // Hapus chart lama
+            }
+
+            const ctx = document.getElementById('bookChart').getContext('2d');
+            chart = new Chart(ctx, {
+                type: 'pie',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Jumlah Buku',
+                        data: data,
+                        backgroundColor: [
+                            'rgba(255, 99, 132, 0.2)',
+                            'rgba(54, 162, 235, 0.2)',
+                            'rgba(255, 206, 86, 0.2)',
+                            'rgba(75, 192, 192, 0.2)',
+                            'rgba(153, 102, 255, 0.2)'
+                        ],
+                        borderColor: [
+                            'rgba(255, 99, 132, 1)',
+                            'rgba(54, 162, 235, 1)',
+                            'rgba(255, 206, 86, 1)',
+                            'rgba(75, 192, 192, 1)',
+                            'rgba(153, 102, 255, 1)'
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(tooltipItem) {
+                                    return tooltipItem.label + ': ' + tooltipItem.raw + ' buku';
+                                }
+                            }
+                        },
+                        datalabels: {
+                            color: '#fff',
+                            font: {
+                                weight: 'bold',
+                                size: 14
+                            },
+                            formatter: function(value) {
+                                return value; // Tampilkan angka jumlah buku
+                            }
+                        }
+                    }
+                },
+                plugins: [ChartDataLabels] // Aktifkan plugin DataLabels
+            });
+        }
+
+        // Fungsi untuk menampilkan halaman
+        function showPage(page, bookId = null) {
+            document.querySelectorAll('.page').forEach(p => p.style.display = 'none');
+            document.getElementById(page).style.display = 'block';
+            if (page === 'home') {
+                renderBooks();
+                updateChart(filteredBooks); // Diagram berdasarkan filtered
+            } else if (page === 'detail' && bookId) {
+                showBookDetail(bookId);
+            }
+        }
+
+        // Fungsi untuk menampilkan daftar buku dengan pagination
+        function renderBooks() {
+            const list = document.getElementById('bookList');
+            list.innerHTML = '';
+            const start = (currentPage - 1) * booksPerPage;
+            const end = start + booksPerPage;
+            const booksToShow = filteredBooks.slice(start, end);
+
+            booksToShow.forEach(book => {
+                list.innerHTML += `
+                    <div class="col-md-6 book-card">
+                        <div class="card">
+                            <div class="card-body">
+                                <h5 class="card-title book-title" onclick="showPage('detail', ${book.id})">${book.title}</h5>
+                                <p class="card-text">${book.author} (${book.year})</p>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+
+            renderPagination();
+        }
+
+        // Fungsi untuk render pagination
+        function renderPagination() {
+            const pagination = document.getElementById('pagination');
+            pagination.innerHTML = '';
+            const totalPages = Math.ceil(filteredBooks.length / booksPerPage);
+
+            if (totalPages <= 1) return; // Tidak perlu pagination jika hanya 1 halaman
+
+            // Tombol Previous
+            const prevLi = document.createElement('li');
+            prevLi.className = `page-item ${currentPage === 1 ? 'disabled' : ''}`;
+            prevLi.innerHTML = `<a class="page-link" href="#" onclick="changePage(${currentPage - 1})">Previous</a>`;
+            pagination.appendChild(prevLi);
+
+            // Nomor halaman
+            for (let i = 1; i <= totalPages; i++) {
+                const li = document.createElement('li');
+                li.className = `page-item ${i === currentPage ? 'active' : ''}`;
+                li.innerHTML = `<a class="page-link" href="#" onclick="changePage(${i})">${i}</a>`;
+                pagination.appendChild(li);
+            }
+
+            // Tombol Next
+            const nextLi = document.createElement('li');
+            nextLi.className = `page-item ${currentPage === totalPages ? 'disabled' : ''}`;
+            nextLi.innerHTML = `<a class="page-link" href="#" onclick="changePage(${currentPage + 1})">Next</a>`;
+            pagination.appendChild(nextLi);
+        }
+
+        // Fungsi untuk mengubah halaman
+        function changePage(page) {
+            const totalPages = Math.ceil(filteredBooks.length / booksPerPage);
+            if (page < 1 || page > totalPages) return;
+            currentPage = page;
+            renderBooks();
+        }
+
+        // Fungsi pencarian
+        function searchBooks() {
+            const query = document.getElementById('search').value.toLowerCase();
+            filteredBooks = books.filter(book => 
+                book.title.toLowerCase().includes(query) || book.author.toLowerCase().includes(query)
+            );
+            currentPage = 1; // Reset ke halaman 1 saat pencarian
+            renderBooks();
+            updateChart(filteredBooks); // Update diagram berdasarkan hasil pencarian
+        }
+
+        // Fungsi untuk menampilkan detail buku
+        function showBookDetail(bookId) {
+            const book = books.find(b => b.id === bookId);
+            if (book) {
+                document.getElementById('detailTitle').textContent = book.title;
+                document.getElementById('detailAuthor').textContent = book.author;
+                document.getElementById('detailYear').textContent = book.year;
+                document.getElementById('detailPages').textContent = book.pages;
+                document.getElementById('detailType').textContent = book.type;
+            }
+        }
+
+        // Fungsi untuk membuka modal tambah buku
+        function showAddBookForm() {
+            new bootstrap.Modal(document.getElementById('addBookModal')).show();
+        }
+
+        // Event listener untuk form tambah buku
+        document.getElementById('addBookForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const title = document.getElementById('newTitle').value.trim();
+            const author = document.getElementById('newAuthor').value.trim();
+            const year = parseInt(document.getElementById('newYear').value);
+            const pages = parseInt(document.getElementById('newPages').value);
+            const type = document.getElementById('newType').value;
+
+            if (title && author && year && pages && type) {
+                const newBook = {
+                    id: Date.now(), // ID unik berdasarkan timestamp
+                    title,
+                    author,
+                    year,
+                    pages,
+                    type
+                };
+                books.push(newBook);
+                filteredBooks = books; // Update filteredBooks
+                saveData();
+                bootstrap.Modal.getInstance(document.getElementById('addBookModal')).hide();
+                document.getElementById('addBookForm').reset();
+                currentPage = 1; // Reset ke halaman 1
+                showPage('home'); // Refresh halaman home
+                alert('Buku berhasil ditambahkan!');
+            } else {
+                alert('Harap isi semua field dengan benar.');
+            }
+        });
+
+        // Fungsi untuk menyimpan data ke localStorage
+        function saveData() {
+            localStorage.setItem('books', JSON.stringify(books));
+        }
+
+        // Inisialisasi: Tampilkan halaman utama
+        showPage('home');
+    </script>
+</body>
+</html>
