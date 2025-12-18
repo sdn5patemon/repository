@@ -21,6 +21,7 @@ body { background-color: #f8f9fa; }
 .book-title:hover { text-decoration: underline; }
 .chart-wrapper {
     max-width: 360px;   /* ubah ke 350–500 sesuai selera */
+    height: 300px;
     margin: 0 auto;     /* posisi tengah */
 }
 .admin-action {
@@ -53,20 +54,24 @@ body { background-color: #f8f9fa; }
 <div class="container mt-4">
 <h2>Daftar Buku Tersedia</h2>
 
-<div class="admin-action">
-    <button class="btn btn-primary btn-sm" onclick="adminLogin()">
-        <i class="bi bi-person-lock"></i> Login Admin
-    </button>
-
-    <button class="btn btn-danger btn-sm d-none" id="btnLogout" onclick="adminLogout()">
-        <i class="bi bi-box-arrow-right"></i> Logout
-    </button>
-</div>
-
 <button class="btn btn-success mb-2 d-none" id="btnTambahBuku" onclick="showAddBookForm()">Tambah Buku</button>
 <button class="btn btn-outline-success mb-2 d-none" id="btnExportExcel" onclick="exportToExcel()">Download Excel</button>
 
 <input type="text" id="search" class="form-control my-3" placeholder="Cari judul / penulis" onkeyup="searchBooks()">
+<div class="row mb-3">
+    <div class="col-md-6">
+      <select id="filterType" class="form-select" onchange="filterBooks()">
+        <option value="">Semua Jenis Buku</option>
+      </select>
+    </div>
+  
+    <div class="col-md-6">
+      <select id="filterYear" class="form-select" onchange="filterBooks()">
+        <option value="">Semua Tahun Terbit</option>
+      </select>
+    </div>
+  </div>
+  
 
 <div class="row mt-4">
 
@@ -84,35 +89,6 @@ body { background-color: #f8f9fa; }
     </div>
   
   </div>
-  
-
-<!-- MODAL TAMBAH BUKU -->
-<div class="modal fade" id="addBookModal">
-<div class="modal-dialog">
-<div class="modal-content">
-<div class="modal-header">
-<h5 class="modal-title">Tambah Buku</h5>
-<button class="btn-close" data-bs-dismiss="modal"></button>
-</div>
-<div class="modal-body">
-<form id="addBookForm">
-<input class="form-control mb-2" id="newTitle" placeholder="Judul" required>
-<input class="form-control mb-2" id="newAuthor" placeholder="Penulis" required>
-<input class="form-control mb-2" type="number" id="newYear" placeholder="Tahun" required>
-<input class="form-control mb-2" type="number" id="newPages" placeholder="Halaman" required>
-<select class="form-control mb-3" id="newType" required>
-<option value="">Pilih Jenis</option>
-<option>Buku Pelajaran</option>
-<option>Buku Cerita</option>
-<option>Majalah</option>
-<option>Koran</option>
-</select>
-<button class="btn btn-primary w-100">Simpan</button>
-</form>
-</div>
-</div>
-</div>
-</div>
 
 <!-- MODAL DETAIL BUKU -->
 <div class="modal fade" id="detailBookModal" tabindex="-1">
@@ -135,84 +111,46 @@ body { background-color: #f8f9fa; }
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
 <script>
-/* ================= ADMIN CONFIG ================= */
-const ADMIN_USERNAME = "50100236";
-const ADMIN_PASSWORD = "50100236";
+const SHEET_API = "https://script.google.com/macros/s/AKfycbzLo2EX0ASnfVWn4vNA2OhVrcD00TK-Cu3wZgL6oRm3o5nJFAYxujKr9UxCDmoS8fCv9g/exec";
 
-/* ================= DATA BUKU ================= */
-let books = JSON.parse(localStorage.getItem("books")) || [
-{ id:1,title:"Harry Potter",author:"J.K Rowling",year:1997,pages:300,type:"Buku Cerita" }
-];
-let filteredBooks = books;
+let books = [];
+let filteredBooks = [];
 let currentPage = 1;
 const perPage = 30;
-
 let chartInstance = null;
 
-/* ================= LOGIN ================= */
-function adminLogin(){
-const u = prompt("Username:");
-const p = prompt("Password:");
-if(u===ADMIN_USERNAME && p===ADMIN_PASSWORD){
-localStorage.setItem("isAdmin","true");
-alert("Login berhasil");
-cekStatusAdmin();
-}else alert("Login gagal");
+/* 🔥 AMBIL DATA DARI GOOGLE SHEET */
+async function loadBooks(){
+  const res = await fetch(SHEET_API);
+  books = await res.json();
+  books.sort((a,b) => b.id - a.id);
+  filteredBooks = books;
+  initFilters();
+  renderBooks();
+  renderChart();
 }
-function adminLogout(){
-localStorage.removeItem("isAdmin");
-cekStatusAdmin();
-}
-function cekStatusAdmin(){
-    const a = localStorage.getItem("isAdmin")==="true";
 
-    ["btnTambahBuku","btnLogout","btnExportExcel"].forEach(id=>{
-        document.getElementById(id).classList.toggle("d-none", !a);
+loadBooks();
+setInterval(loadBooks, 60000); // refresh tiap 60 detik
+
+function filterBooks() {
+    const keyword = search.value.toLowerCase();
+    const type = filterType.value;
+    const year = filterYear.value;
+
+    filteredBooks = books.filter(b => {
+        return (
+            (b.title.toLowerCase().includes(keyword) ||
+             b.author.toLowerCase().includes(keyword)) &&
+            (type === "" || b.type === type) &&
+            (year === "" || b.year == year)
+        );
     });
 
-    renderBooks(); // 🔴 INI KUNCINYA
-
-    document.querySelector("button[onclick='adminLogin()']")
-    .classList.toggle("d-none", a);
-}
-cekStatusAdmin();
-
-/* ================= TAMBAH BUKU ================= */
-function showAddBookForm(){
-if(localStorage.getItem("isAdmin")!=="true") return;
-new bootstrap.Modal(document.getElementById("addBookModal")).show();
+    currentPage = 1;
+    renderBooks();
 }
 
-document.getElementById("addBookForm").addEventListener("submit",e=>{
-e.preventDefault();
-if(localStorage.getItem("isAdmin")!=="true") return;
-
-const isDuplicate = books.some(b =>
-    b.title.toLowerCase() === newTitle.value.toLowerCase() &&
-    b.author.toLowerCase() === newAuthor.value.toLowerCase()
-);
-
-if(isDuplicate){
-    alert("Buku sudah ada!");
-    return;
-}
-
-books.unshift({
-    id: Date.now(),
-    title: newTitle.value,
-    author: newAuthor.value,
-    year: +newYear.value,
-    pages: +newPages.value,
-    type: newType.value
-});
-localStorage.setItem("books",JSON.stringify(books));
-filteredBooks=books;
-currentPage=1;
-renderBooks();
-renderChart();
-bootstrap.Modal.getInstance(addBookModal).hide();
-e.target.reset();
-});
 
 /* ================= TAMPIL BUKU ================= */
 function renderBooks(){
@@ -243,10 +181,9 @@ function renderBooks(){
     renderPagination(); // 🔴 PENTING
 }
 
-renderBooks();
-
-
 function renderChart() {
+    if (!books.length) return;
+
     const countByType = {};
 
     books.forEach(b => {
@@ -259,7 +196,7 @@ function renderChart() {
     const ctx = document.getElementById("bookChart").getContext("2d");
 
     if (chartInstance) {
-        chartInstance.destroy(); // supaya realtime
+        chartInstance.destroy();
     }
 
     chartInstance = new Chart(ctx, {
@@ -271,17 +208,17 @@ function renderChart() {
             }]
         },
         options: {
-    responsive: true,
-    maintainAspectRatio: false,
-    plugins: {
-        legend: {
-            position: "bottom"
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    position: "bottom"
+                }
+            }
         }
-    }
-}
     });
 }
-renderChart();
+
 
 function showBookDetail(bookId) {
     const book = books.find(b => b.id === bookId);
@@ -341,13 +278,7 @@ function renderPagination(){
 
 /* ================= SEARCH ================= */
 function searchBooks(){
-    const q = search.value.toLowerCase();
-    filteredBooks = books.filter(b =>
-        b.title.toLowerCase().includes(q) ||
-        b.author.toLowerCase().includes(q)
-    );
-    currentPage = 1;
-    renderBooks();
+    filterBooks();
 }
 
 /* ================= EXPORT EXCEL ================= */
@@ -362,29 +293,26 @@ XLSX.utils.book_append_sheet(wb,ws,"Buku");
 XLSX.writeFile(wb,"Data_Buku_Perpustakaan.xlsx");
 }
 
-/* ================= HAPUS BUKU ================= */
-function deleteBook(bookId){
-    if(localStorage.getItem("isAdmin")!=="true") return;
+/* ================= FILTER BUKU ================= */
+function initFilters() {
+    const typeSelect = document.getElementById("filterType");
+    const yearSelect = document.getElementById("filterYear");
 
-    const book = books.find(b => b.id === bookId);
-    if(!book) return;
+    const types = [...new Set(books.map(b => b.type))];
+    const years = [...new Set(books.map(b => b.year))].sort((a,b)=>b-a);
 
-    if(!confirm(`Hapus buku "${book.title}"?`)) return;
+    typeSelect.innerHTML = '<option value="">Semua Jenis Buku</option>';
+    yearSelect.innerHTML = '<option value="">Semua Tahun Terbit</option>';
 
-    // hapus dari array
-    books = books.filter(b => b.id !== bookId);
-    filteredBooks = filteredBooks.filter(b => b.id !== bookId);
+    types.forEach(t => {
+        typeSelect.innerHTML += `<option value="${t}">${t}</option>`;
+    });
 
-    // simpan ulang
-    localStorage.setItem("books", JSON.stringify(books));
-
-    // perbaiki halaman kosong
-    const totalPages = Math.ceil(filteredBooks.length / perPage);
-    if(currentPage > totalPages) currentPage = totalPages || 1;
-
-    renderBooks();
-    renderChart();
+    years.forEach(y => {
+        yearSelect.innerHTML += `<option value="${y}">${y}</option>`;
+    });
 }
+
 
 </script>
 </body>
