@@ -8,6 +8,8 @@
   <!-- Google Font -->
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
 
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
   <!-- Chart.js -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
@@ -75,10 +77,24 @@
     }
 
     .chart-wrapper {
-        max-width: 600px;
-        height: 300px;
+        max-width: 300px;
+        height: 200px;
         margin: auto;
     }
+
+
+.nav-user {
+  font-size: 22px;
+  color: #ff0000;
+  text-decoration: none;
+  padding: 8px;
+  border-radius: 50%;
+  transition: background 0.3s;
+}
+
+.nav-user:hover {
+  background: #eef2ff;
+}
 
   </style>
 </head>
@@ -87,6 +103,12 @@
 <header>
   <h1>📚 Giri Widya LibSchool</h1>
   <p>Dashboard Pengunjung Perpustakaan</p>
+  <nav class="navbar">
+    <a href="index.html" class="nav-user" title="Portal Sekolah">
+      <i class="fa-solid fa-home"></i>
+    </a>
+  </nav>
+  
 </header>
 
 <div class="container">
@@ -122,7 +144,23 @@
 </footer>
 
 <script>
-  const URL_API = "https://script.google.com/macros/s/AKfycbyywj4Ugc3AoHHNwestbo9PurbjqN7lvvlRicA0-lHIhWssuP9LGyIXG3KMdNnSwMAwlQ/exec";
+  const URL_API = "https://script.google.com/macros/s/AKfycbxahC9CkhIpfHCJpFTLORtf_fT1d89T4mt0o0SAuxENVfYhBktsnV4GlyVfw8gO40VBtg/exec";
+
+  function formatTanggal(tgl) {
+  const d = new Date(tgl);
+  const y = d.getFullYear();
+  const m = String(d.getMonth() + 1).padStart(2, '0');
+  const day = String(d.getDate()).padStart(2, '0');
+  return `${y}-${m}-${day}`;
+}
+
+function formatWaktu(wkt) {
+  const d = new Date(wkt);
+  const h = String(d.getHours()).padStart(2, '0');
+  const m = String(d.getMinutes()).padStart(2, '0');
+  const s = String(d.getSeconds()).padStart(2, '0');
+  return `${h}:${m}:${s}`;
+}
 
   fetch(URL_API)
   .then(res => res.json())
@@ -135,7 +173,10 @@
     batasTanggal.setDate(hariIni.getDate() - 30);
 
     data.slice(1).forEach(row => {
-      const [nama, kelas, tanggal, waktu] = row;
+      const nama   = row[1];
+      const kelas  = row[2];
+      const tanggal = row[3];
+      const waktu  = row[4];
 
       const tglData = new Date(tanggal);
 
@@ -147,8 +188,9 @@
         tr.innerHTML = `
           <td>${nama}</td>
           <td><span class="badge">${kelas}</span></td>
-          <td>${tanggal}</td>
-          <td>${waktu}</td>
+          <td>${formatTanggal(tanggal)}</td>
+          <td>${formatWaktu(waktu)}</td>
+
         `;
         tbody.appendChild(tr);
 
