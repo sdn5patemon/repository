@@ -8,26 +8,44 @@
   <script src="https://unpkg.com/html5-qrcode"></script>
 
   <style>
+    * {
+      box-sizing: border-box;
+    }
+  
     body {
+      margin: 0;
       font-family: Arial, sans-serif;
+      background: #000;
+      color: #fff;
       text-align: center;
-      background: #f5f5f5;
     }
+  
     h2 {
-      margin-top: 20px;
+      margin: 10px 0 5px;
     }
+  
+    p {
+      margin: 0 0 10px;
+      font-size: 14px;
+    }
+  
     #reader {
-      width: 300px;
-      margin: 20px auto;
-      border: 2px solid #333;
-      border-radius: 10px;
+      width: 100vw;
+      height: 70vh;
     }
+  
     #status {
-      font-size: 18px;
-      margin-top: 10px;
+      height: 20vh;
+      font-size: 22px;
       font-weight: bold;
+      padding: 10px;
+      background: #111;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
   </style>
+  
 </head>
 <body>
 
@@ -39,7 +57,6 @@
 
 <!-- Status -->
 <div id="status">Menunggu scan...</div>
-
 
 
 <script>
@@ -72,9 +89,14 @@
 
   const html5QrCode = new Html5Qrcode("reader");
 
+  let sedangProses = false;
   html5QrCode.start(
     { facingMode: "environment" }, // kamera belakang
-    { fps: 10, qrbox: 250 },
+    {
+  fps: 10,
+  qrbox: { width: 300, height: 300 }
+},
+
     (decodedText) => {
       if (sedangProses) return;
       sedangProses = true;
@@ -88,7 +110,11 @@
         sedangProses = false;
         html5QrCode.start(
           { facingMode: "environment" },
-          { fps: 10, qrbox: 250 },
+          {
+  fps: 10,
+  qrbox: { width: 300, height: 300 }
+},
+
           arguments.callee
         );
       }, 3000);
