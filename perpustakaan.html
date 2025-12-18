@@ -103,6 +103,7 @@ body { background-color: #f8f9fa; }
           <p><strong>Penulis:</strong> <span id="detailAuthor"></span></p>
           <p><strong>Tahun Terbit:</strong> <span id="detailYear"></span></p>
           <p><strong>Jenis Buku:</strong> <span id="detailType"></span></p>
+          <p><strong>Kode Buku:</strong> <span id="detailCodebooks"></span></p>
         </div>
       </div>
     </div>
@@ -228,6 +229,7 @@ function showBookDetail(bookId) {
     document.getElementById("detailAuthor").innerText = book.author;
     document.getElementById("detailYear").innerText = book.year;
     document.getElementById("detailType").innerText = book.type;
+    document.getElementById("detailCodebooks").innerText = book.codebooks;
 
     const modal = new bootstrap.Modal(
         document.getElementById("detailBookModal")
@@ -279,18 +281,6 @@ function renderPagination(){
 /* ================= SEARCH ================= */
 function searchBooks(){
     filterBooks();
-}
-
-/* ================= EXPORT EXCEL ================= */
-function exportToExcel(){
-if(localStorage.getItem("isAdmin")!=="true") return;
-const data = books.map((b,i)=>({
-No:i+1,Judul:b.title,Penulis:b.author,Tahun:b.year,Halaman:b.pages,Jenis:b.type
-}));
-const ws=XLSX.utils.json_to_sheet(data);
-const wb=XLSX.utils.book_new();
-XLSX.utils.book_append_sheet(wb,ws,"Buku");
-XLSX.writeFile(wb,"Data_Buku_Perpustakaan.xlsx");
 }
 
 /* ================= FILTER BUKU ================= */
